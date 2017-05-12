@@ -13,7 +13,7 @@
 <nav class="navbar navbar-inverse">
   <div class="container-fluid">
     <div class="navbar-header">
-      <a class="navbar-brand">Gooseberry</a>
+      <a href="/" class="navbar-brand">Gooseberry</a>
     </div>
     <ul class="nav navbar-nav navbar-right">
     <li>
@@ -33,12 +33,12 @@
       <label class="control-label col-sm-1" for="pwd">Domain:</label>
       <div class="col-sm-6">
         <input class="form-control" name="domain" placeholder="Enter domain">
-        {% if email %}
         <input name="email" type="hidden" email="{{email}}" />
-        {% endif %}
       </div>
       <div class="col-sm-1">
         <input type="submit" class="btn btn-info" value="Search">
+        <a href="{{ url_for('signin')}}"> Sign-in </a>
+        <a href="{{ url_for('signup') }}"> Sign-up </a>
       </div>
     </div>
   </form>

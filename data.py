@@ -98,6 +98,7 @@ class user:
 	id = ''
 	username = ''
 	user_week_time_table = timetable()
+	friendlist = []
 	def __init__(self, id):
 		self.id = id
 	def set_id(self,id):

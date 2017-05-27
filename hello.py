@@ -1,6 +1,7 @@
 from flask import Flask
 from flask import abort, redirect, url_for, render_template
 from flask import request
+import json
 app = Flask(__name__)
 
 @app.route("/")
@@ -10,11 +11,13 @@ def hello():
 @app.route("/index/")
 def index():
         user = 001
+        bkdata= json.dumps({"color1":[5,17,25],"color2":[50,200],"color3":[64,21]});
+        		
     # if not signed-in:
     #     return redirect(url_for('hello'))
     # else:
     #     get user
-        return render_template("index.html", user=user)
+        return render_template("index.html", user=user, bgcolor = bkdata)
 
 # evoked by user.html
 @app.route("/createInvitation/")
@@ -55,9 +58,13 @@ def about():
 def tutorial():
     return "Under construction"
 
-@app.route("/timetable/")
+@app.route("/timetable", methods=['POST','GET'])
 def timetable():
-    return render_template("timetable_test.html")
+	if request.method == 'POST':
+		data = request.get_json()
+	else:
+		data = {}
+	return render_template("timetable_test.html",data=data)
 
 @app.route("/tablesuperimposition/")
 def tablesuperimposition():

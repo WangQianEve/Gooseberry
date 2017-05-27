@@ -40,6 +40,15 @@ def invitation(inv_id):
             return render_template("invitation.html", data=invitation, on_create = on_create)
         else:
             return "Invitation does not exist!"
+		
+@app.route("/timetable/")
+def timetable():
+    return render_template("timetable_test.html")
+	
+@app.route("/tablesuperimposition/")
+def tablesuperimposition():
+    return render_template("table_superimposition.html")	
+
 
 if __name__ == "__main__":
     app.run()

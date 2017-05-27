@@ -15,28 +15,16 @@
     <div class="navbar-header">
       <a class="navbar-brand">WangQian</a>
     </div>
-    <ul class="nav navbar-nav navbar-right">
-    <li>
-      {% if email %}
-      <a ><span>{{email}}</span></a>
-      {% else %}
-      <a href="{{ url_for('login') }}"><span class="glyphicon glyphicon-log-in"> Login with Github</span></a>
-      {% endif %}
-    </li>
-    </ul>
   </div>
 </nav>
 
 <div class="container">
   <h2>MINING  DEEP KNOWLEDGE  FROM SCIENTIFIC NETWORKS</h2>
-  <form method="GET" action="/DomainSearch" class="form-horizontal" role="form">
+  <form method="POST" action="/createInvitation" class="form-horizontal" role="form">//用ajax才对
     <div class="form-group">
       <label class="control-label col-sm-1" for="pwd">Domain:</label>
       <div class="col-sm-6">
         <input class="form-control" name="domain" placeholder="Enter domain">
-        {% if email %}
-        <input name="email" type="hidden" email="{{email}}" />
-        {% endif %}
       </div>
       <div class="col-sm-1">
         <input type="submit" class="btn btn-info" value="Search">

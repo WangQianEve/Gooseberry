@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>DEFS</title>
+  <title>Gooseberry</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css">
@@ -17,10 +17,10 @@
     </div>
     <ul class="nav navbar-nav navbar-right">
     <li>
-      <a href="{{ url_for('signin') }}"><span class="glyphicon glyphicon-log-in"> Sign-in </span></a>
+      <a href="{{ url_for('signin') }}"><span class="glyphicon glyphicon-log-in"> About Us </span></a>
     </li>
     <li>
-      <a href="{{ url_for('signup') }}"><span class="glyphicon glyphicon-log-in"> Sign-up </span></a>
+      <a href="{{ url_for('signup') }}"><span class="glyphicon glyphicon-log-in"> Tutorial </span></a>
     </li>
     </ul>
   </div>
@@ -28,20 +28,8 @@
 
 <div class="container">
   <h2>MINING  DEEP KNOWLEDGE  FROM SCIENTIFIC NETWORKS</h2>
-  <form method="GET" action="/DomainSearch" class="form-horizontal" role="form">
-    <div class="form-group">
-      <label class="control-label col-sm-1" for="pwd">Domain:</label>
-      <div class="col-sm-6">
-        <input class="form-control" name="domain" placeholder="Enter domain">
-        <input name="email" type="hidden" email="{{email}}" />
-      </div>
-      <div class="col-sm-1">
-        <input type="submit" class="btn btn-info" value="Search">
-        <a href="{{ url_for('signin')}}"> Sign-in </a>
-        <a href="{{ url_for('signup') }}"> Sign-up </a>
-      </div>
-    </div>
-  </form>
+  <a href="{{ url_for('index') }}"> Sign in with Wechat </a></br>
+  <a href="#"> Sign in with Facebook </a>
 </div>
 
 </body>

@@ -15,34 +15,25 @@
     <div class="navbar-header">
       <a class="navbar-brand">WangQian</a>
     </div>
-    <ul class="nav navbar-nav navbar-right">
-    <li>
-      {% if email %}
-      <a ><span>{{email}}</span></a>
-      {% else %}
-      <a href="{{ url_for('login') }}"><span class="glyphicon glyphicon-log-in"> Login with Github</span></a>
-      {% endif %}
-    </li>
-    </ul>
   </div>
 </nav>
 
 <div class="container">
-  <h2>MINING  DEEP KNOWLEDGE  FROM SCIENTIFIC NETWORKS</h2>
-  <form method="GET" action="/DomainSearch" class="form-horizontal" role="form">
-    <div class="form-group">
-      <label class="control-label col-sm-1" for="pwd">Domain:</label>
-      <div class="col-sm-6">
-        <input class="form-control" name="domain" placeholder="Enter domain">
-        {% if email %}
-        <input name="email" type="hidden" email="{{email}}" />
-        {% endif %}
-      </div>
-      <div class="col-sm-1">
-        <input type="submit" class="btn btn-info" value="Search">
-      </div>
-    </div>
-  </form>
+  <h2> TITLE </h2>
+  <p> starter:xxx </p></br>
+  <p> introduction </p>
+  <p> invitation period </p>
+  display
+  <button type="button" class="btn btn-default"> Join/Exit </button>
+  <button type="button" class="btn btn-primary"> Add To Group </button>
+  <button type="button" class="btn btn-success"> Delete </button>
+  <button type="button" class="btn btn-info"> Confirm </button>
+  <p> My choice </p>
+  <button type="button" class="btn btn-warning"> Change </button>
+  if qiaoding
+    if
+  <button type="button" class="btn btn-danger"> Add To Calendar </button>
+  <button type="button" class="btn btn-link"> Delete From Calendar </button>
 </div>
 
 </body>

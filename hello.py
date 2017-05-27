@@ -1,5 +1,6 @@
 from flask import Flask
 from flask import abort, redirect, url_for
+from flask import request
 app = Flask(__name__)
 
 @app.route("/")
@@ -11,10 +12,16 @@ def index():
     if not signed-in:
         return redirect(url_for('hello'))
     else:
-        get invitation list
-        get join list
-        get 
-        return render_template("index.html")
+        get user
+        return render_template("index.html", user=user)
+
+@app.route("/createInvitation/")
+def createInvitation():
+    id=002
+    if success:
+        return redirect(url_for('invitation', inv_id=id, on_create=True ))
+    else:
+        return 0
 
 @app.route("/user/")
 def user():
@@ -29,7 +36,8 @@ def invitation(inv_id):
         return redirect(url_for('hello'))
     else:
         if id valid:
-            return render_template("invitation.html")
+            get invitation
+            return render_template("invitation.html", data=invitation, on_create = on_create)
         else:
             return "Invitation does not exist!"
 

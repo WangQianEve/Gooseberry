@@ -1,5 +1,9 @@
 from flask import Flask
+<<<<<<< HEAD
 from flask import abort, redirect, url_for, render_template
+=======
+from flask import abort, redirect, url_for,render_template
+>>>>>>> 677a35ab504b7baa9f29a7ea4618ce742cc26ae9
 from flask import request
 app = Flask(__name__)
 
@@ -54,6 +58,14 @@ def about():
 @app.route("/tutorial/")
 def tutorial():
     return "Under construction"
+
+@app.route("/timetable/")
+def timetable():
+    return render_template("timetable_test.html")
+
+@app.route("/tablesuperimposition/")
+def tablesuperimposition():
+    return render_template("table_superimposition.html")
 
 if __name__ == "__main__":
     app.run()

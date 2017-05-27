@@ -23,6 +23,10 @@ def invitation(inv_id):
 @app.route("/timetable/")
 def timetable():
     return render_template("timetable_test.html")
+	
+@app.route("/tablesuperimposition/")
+def tablesuperimposition():
+    return render_template("table_superimposition.html")	
 
 if __name__ == "__main__":
     app.run()

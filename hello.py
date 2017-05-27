@@ -27,7 +27,7 @@ def createInvitation():
     # else:
     #     return 0
 
-@app.route("/user/")
+@app.route("/user")
 def user():
     # if not signed-in:
     #     return redirect(url_for('hello'))
@@ -37,7 +37,7 @@ def user():
 @app.route("/invitation/<inv_id>")
 def invitation(inv_id):
     invitation = 'inv'
-    return render_template("invitation.html", data=invitation, on_create = on_create)
+    return render_template("invitation.html", data=invitation, on_create = True)
     # if not signed-in:
     #     return redirect(url_for('hello'))
     # else:

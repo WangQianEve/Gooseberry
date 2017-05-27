@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.bootcss.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+	<script src="http://maxcdn.bootstrapcdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+	</head>
+	
+	<body>
+	<div>
+	<table border="5" class="pos_abs">
+		<tr>
+		<td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td>
+		</tr>
+		<tr>
+		<td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td>
+		</tr>
+		<tr>
+		<td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td>
+		</tr>
+		<tr>
+		<td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td>
+		</tr>
+		<tr>
+		<td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td>
+		</tr>
+		<tr>
+		<td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td>
+		</tr>
+		<tr>
+		<td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td>
+		</tr>
+		<tr>
+		<td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100">
+		</tr>
+		<tr>
+		<td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td>
+		</tr>
+		<tr>
+		<td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td>
+		</tr>
+		<tr>
+		<td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td>
+		</tr>
+		<tr>
+		<td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td>
+		</tr>
+	</table>
+	</div>
+	
+	</body>
+	
+	<script language="javascript" type="text/javascript">
+	
+	var tds = document.getElementsByTagName('td');
+    for(var i = 0; i < tds.length; i++){
+        tds[i].index = i;
+        tds[i].onclick = function () {
+            if(tds[this.index].style.backgroundColor == 'purple')
+				tds[this.index].style.backgroundColor = 'white';
+			else 
+				tds[this.index].style.backgroundColor = 'purple';
+        }
+    }
+	
+	</script>
+</html>
+

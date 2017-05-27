@@ -19,6 +19,10 @@ def invitation(inv_id):
         return render_template("invitation.html")
     else:
         return "Invitation does not exist!"
+		
+@app.route("/timetable/")
+def timetable():
+    return render_template("timetable_test.html")
 
 if __name__ == "__main__":
     app.run()

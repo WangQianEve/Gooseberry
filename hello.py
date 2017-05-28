@@ -2,17 +2,34 @@ from flask import Flask
 from flask import abort, redirect, url_for, render_template
 from flask import request
 import json
+from data import timeunit,timetable,activity,user
 app = Flask(__name__)
+
+#Make some data to use
+user1 = user(001)
+user2 = user(002)
+user3 = user(003)
+cur_user = user1
+default_bkdata = {"color1":[],"color2":[],"color3":[5,17,25,64,100,200]}
 
 @app.route("/")
 def hello():
     return render_template("hello.html")
 
-@app.route("/index/")
+@app.route("/index/",methods=['POST','GET'])
 def index():
         user = 001
-        bkdata= json.dumps({"color1":[5,17,25],"color2":[50,200],"color3":[64,21]});
-        		
+        print request.method
+        if request.method == 'POST':
+            print "Got it"
+            data = json.loads(request.get_json().encode("utf-8"))
+            print data
+            print type(data)
+            tmplist = data['id']
+            default_bkdata['color3']=data['id']
+		
+        bkdata= json.dumps(default_bkdata);
+        print bkdata
     # if not signed-in:
     #     return redirect(url_for('hello'))
     # else:

@@ -218,16 +218,19 @@
 				save_data.id.push(i);
 			}
 		}
-		console.log(JSON.stringify(save_data));
+		save_data_json = JSON.stringify(save_data);
+		console.log(save_data_json);
 		
 		//send the data
 		$.ajax({
 			type: 'POST',
-			url: "/index",
-			data: JSON.stringify(save_data), 
+			url: "/index/",
+			data: JSON.stringify(save_data_json), 
 			contentType: 'application/json; charset=UTF-8',
 			dataType: 'json', 
 			success: function(data) { 
+				console.log("sent")
+				console.log(data)
 			},
 			error: function(e) {
 			}

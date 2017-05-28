@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>DEFS</title>
+  <title>Gooseberry</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css">
@@ -13,25 +13,31 @@
 <nav class="navbar navbar-inverse">
   <div class="container-fluid">
     <div class="navbar-header">
-      <a class="navbar-brand">WangQian</a>
+      <a class="navbar-brand">Gooseberry</a>
     </div>
   </div>
 </nav>
 
 <div class="container">
-  <h2> TITLE </h2>
-  <p> starter:xxx </p></br>
+  <h2> TITLE </h2><h4> voting </h4>
+  <p> starter:xxx </p>
   <p> introduction </p>
   <p> invitation period </p>
-  display
-  <button type="button" class="btn btn-default"> Join/Exit </button>
-  <button type="button" class="btn btn-primary"> Add To Group </button>
-  <button type="button" class="btn btn-success"> Delete </button>
-  <button type="button" class="btn btn-info"> Confirm </button>
-  <p> My choice </p>
+  <form role="form">
+    <div class="checkbox">
+      <label><input type="checkbox" value="">slot 1</label>
+    </div>
+    <div class="checkbox">
+      <label><input type="checkbox" value="">slot 2</label>
+    </div>
+    <div class="checkbox disabled">
+      <label><input type="checkbox" value="" disabled>slot 3</label>
+    </div>
+  </form>
+  <button type="button" class="btn btn-success"> Join </button>
+  <button type="button" class="btn btn-danger"> Delete </button>
   <button type="button" class="btn btn-warning"> Change </button>
-  <button type="button" class="btn btn-danger"> Add To Calendar </button>
-  <button type="button" class="btn btn-link"> Delete From Calendar </button>
+  <button type="button" class="btn btn-info"> Add To Group </button>
 </div>
 
 </body>

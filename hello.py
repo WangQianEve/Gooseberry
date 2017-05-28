@@ -27,8 +27,13 @@ def createInvitation():
     # else:
     #     return 0
 
-@app.route("/user")
+@app.route("/user/", methods=['GET', 'POST'])
 def user():
+    if request.method == 'POST':
+        # add into database
+        print(request.form['title'])
+        return "001"
+    else:
     # if not signed-in:
     #     return redirect(url_for('hello'))
     # else:

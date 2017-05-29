@@ -5,12 +5,29 @@ import json
 from data import timeunit,timetable,activity,user
 app = Flask(__name__)
 
+
+def update_user_calendar(usr,time_unit_list):
+    usr.user_week_time_table.clear_timetable()
+    for i in time_unit_list:
+	    usr.user_week_time_table.add_time_unit(cur_date,i,1)
+
 #Make some data to use
+time_amount = 7*36
+cur_date = 20170101
 user1 = user(001)
 user2 = user(002)
 user3 = user(003)
 cur_user = user1
-default_bkdata = {"color1":[],"color2":[],"color3":[5,17,25,64,100,200]}
+default_bkdata = {"color1":[],"color2":[],"color3":[5,17,25,64,100]}
+
+user1.friendlist.append(user2)
+user1.friendlist.append(user3)
+list1=[5,17,25,64,100]
+list2=[5,22,64,80]
+list3=[5,20,25,90]
+update_user_calendar(user1,list1)
+update_user_calendar(user2,list2)
+update_user_calendar(user3,list3)
 
 @app.route("/")
 def hello():
@@ -21,10 +38,7 @@ def index():
         user = 001
         print request.method
         if request.method == 'POST':
-            print "Got it"
             data = json.loads(request.get_json().encode("utf-8"))
-            print data
-            print type(data)
             tmplist = data['id']
             default_bkdata['color3']=data['id']
 		
@@ -52,7 +66,9 @@ def user():
     # if not signed-in:
     #     return redirect(url_for('hello'))
     # else:
-        return render_template("user.html")
+        bkdata= json.dumps(default_bkdata);
+        print bkdata
+        return render_template("user.html",bgcolor = bkdata,friendlist=cur_user.friendlist)
 
 @app.route("/invitation/<inv_id>")
 def invitation(inv_id):
@@ -86,6 +102,9 @@ def timetable():
 @app.route("/tablesuperimposition/")
 def tablesuperimposition():
     return render_template("table_superimposition.html")
+
+
+
 
 if __name__ == "__main__":
     app.run()

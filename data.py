@@ -33,7 +33,7 @@ class timeunit:
 		return self.number
 		
 class timetable:
-	time_unit_num_per_day = 48
+	time_unit_num_per_day = 24
 	#Record unavailable time units in this week
 	week_table = []
 	#def __init__(self):
@@ -57,6 +57,8 @@ class timetable:
 		return -1	
 	def set_time_unit_status(self, index, status):
 		self.week_table[index].set_status(status)
+	def clear_timetable(self):
+		self.week_table=[]
 
 class activity:
 	id = ''

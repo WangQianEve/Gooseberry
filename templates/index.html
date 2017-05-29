@@ -1,12 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>DEFS</title>
+  <title>Gooseberry</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.bootcss.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
   <script src="http://maxcdn.bootstrapcdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <!-- <script type="text/javascript" src="/static/script/index.js"></script> -->
+  <script>
+  function getInv(){
+    alert("hey");
+    $(.test).hide();
+    // $(#invTbody).append("<tr><td><a href=\"{{url_for('invitation',inv_id='001')}}\"> invitation 002 </a></td><td>voting</td><td>evelyn</td></tr>");
+    // $.ajax({
+    //   type: "POST",
+    //   url: "/getinv/",
+    //   success: function() {
+    //   }
+    // });
+  };
+</script>
 </head>
 <body>
 
@@ -17,10 +31,10 @@
     </div>
     <ul class="nav navbar-nav navbar-right">
     <li>
-      <a href="{{ url_for('hello') }}"><span class="glyphicon glyphicon-log-out"> Log Out </span></a>
+      <a href="{{ url_for('logout') }}"><span class="glyphicon glyphicon-log-out"> Log Out </span></a>
     </li>
     <li>
-      <a href="#"><span class="glyphicon glyphicon-log-in"> Name </span></a>
+      <a href="#"><span class="glyphicon glyphicon-user"> {{uname}}</span></a>
     </li>
     </ul>
   </div>
@@ -29,9 +43,9 @@
 <div class="container">
   <ul class="nav nav-tabs">
     <li class="active"><a data-toggle="tab" href="#calendar">Calendar</a></li>
-    <li><a data-toggle="tab" href="#menu2"> I Started </a></li>
-    <li><a data-toggle="tab" href="#menu3"> I Joined </a></li>
-    <li><a data-toggle="tab" href="#contacts"> Contacts </a></li>
+    <li><a data-toggle="tab" href="#invitations" onclick="getInv()">Invitations</a></li>
+    <li><a data-toggle="tab" href="#events" onclick="getEve()">Events</a></li>
+    <li><a data-toggle="tab" href="#contacts" onclick="getCon()">Contacts</a></li>
   </ul>
 
   <div class="tab-content">
@@ -39,10 +53,21 @@
       <h3>HOME</h3>
       <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
     </div>
-    <div id="menu2" class="tab-pane fade">
-      <h3>Menu 2</h3>
-      <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
-      <a href="{{url_for('invitation', inv_id='001' )}}"> invitation 001 </a>
+    <div id="invitations" class="tab-pane fade">
+      <h3>Invitations I started</h3>
+      <p class="test">safsd.</p>
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>State</th>
+            <th>People</th>
+          </tr>
+        </thead>
+        <tbody id="invTbody">
+          <tr><td><a href="{{url_for('invitation',inv_id='001')}}"> invitation 001 </a></td><td>voting</td><td>evelyn</td></tr>
+        </tbody>
+      </table>
     </div>
     <div id="menu3" class="tab-pane fade">
       <h3>Menu 3</h3>

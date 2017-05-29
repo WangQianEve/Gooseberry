@@ -1,6 +1,11 @@
 # Data
+## Session
++ uid
++ uname
+
 ## User
-+ id
++ uid
++ uname
 + timetable
 + contacts
   + id

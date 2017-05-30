@@ -24,10 +24,11 @@ def index():
 @app.route("/getinv/",methods=['GET','POST'])
 def getinv():
     if request.method == 'POST':
-        return database.findInv("iid,ititle,istate,icount",session['uid'])
+        return "yes gti"
+#        return database.findInv("iid,ititle,istate,icount",session['uid'])
 
 @app.route("/getUinv/",methods=['GET','POST'])
-def getinv():
+def getUinv():
     # to be modified
     if request.method == 'POST':
         return database.findUInv("iid,ititle,istate,icount",session['uid'])

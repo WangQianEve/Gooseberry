@@ -4,10 +4,23 @@
   <title>Gooseberry</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.bootcss.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-  <script src="http://maxcdn.bootstrapcdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <script type="text/javascript" src="/static/script/index.js"></script>
+  <script>
+  function getInv(){
+    alert("js");
+    // $('#invTbody').append("<tr><td><a href=\"{{url_for('invitation',inv_id='001')}}\"> invitation 002 </a></td><td>voting</td><td>evelyn</td></tr>");
+    // $.ajax({
+    //   type: "POST",
+    //   url: "/getinv/",
+    //   success: function(data) {
+    //     alert(data);
+    //   }
+    // });
+  };
+  </script>
 </head>
 <body>
 
@@ -31,8 +44,8 @@
   <ul class="nav nav-tabs">
     <li class="active"><a data-toggle="tab" href="#calendar">Calendar</a></li>
     <li><a data-toggle="tab" href="#invitations" onclick="getInv()">Invitations</a></li>
-    <li><a data-toggle="tab" href="#events" onclick="getEve()">Events</a></li>
-    <li><a data-toggle="tab" href="#contacts" onclick="getCon()">Contacts</a></li>
+    <li><a data-toggle="tab" href="#events" >Events</a></li>
+    <li><a data-toggle="tab" href="#contacts" >Contacts</a></li>
   </ul>
 
   <div class="tab-content">
@@ -42,7 +55,7 @@
     </div>
     <div id="invitations" class="tab-pane fade">
       <h3>Invitations I started</h3>
-      <p class="test">safsd.</p>
+      <p>safsd.</p>
       <table class="table table-hover">
         <thead>
           <tr>

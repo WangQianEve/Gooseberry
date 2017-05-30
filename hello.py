@@ -25,7 +25,13 @@ def index():
 def getinv():
     if request.method == 'POST':
         return database.findInv("iid,ititle,istate,icount",session['uid'])
-        
+
+@app.route("/getUinv/",methods=['GET','POST'])
+def getinv():
+    # to be modified
+    if request.method == 'POST':
+        return database.findUInv("iid,ititle,istate,icount",session['uid'])
+
 @app.route('/logout')
 def logout():
     session.pop('uid', None)

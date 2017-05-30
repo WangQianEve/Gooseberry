@@ -56,9 +56,22 @@
         </tbody>
       </table>
     </div>
-    <div id="menu3" class="tab-pane fade">
-      <h3>Menu 3</h3>
-      <p>Eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+    <div id="events" class="tab-pane fade">
+      <h3>Events I Joined</h3>
+      <p>blablabla.</p>
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>State</th>
+            <th>People</th>
+            <th>Creator</th>
+          </tr>
+        </thead>
+        <tbody id="eveTbody">
+          <tr><td><a href="{{url_for('invitation',inv_id='001')}}"> invitation 001 </a></td><td>voting</td><td>20</td><td>evelyn</td></tr>
+        </tbody>
+      </table>
     </div>
     <div id="contacts" class="tab-pane fade">
       <h3>Contacts</h3>

@@ -13,6 +13,7 @@ class timeunit:
 	def __init__(self, date, number):
 		self.date = date
 		self.number = number
+		self.status = 0
 	def __init__(self, date, number,status):
 		self.date = date
 		self.number = number
@@ -33,12 +34,13 @@ class timeunit:
 		return self.number
 		
 class timetable:
-	time_unit_num_per_day = 24
+	time_unit_num = 7*36
 	#Record unavailable time units in this week
-	week_table = []
-	#def __init__(self):
+	
+	def __init__(self):
+		self.week_table = []
 	def add_time_unit(self, date, number, status):
-		if(number < self.time_unit_num_per_day):
+		if(number < self.time_unit_num):
 			new_unit = timeunit(date,number,status)
 			self.week_table.append(new_unit)
 	def del_time_unit(self, index):
@@ -59,12 +61,17 @@ class timetable:
 		self.week_table[index].set_status(status)
 	def clear_timetable(self):
 		self.week_table=[]
+	def print_timetable(self):
+		for u in self.week_table:
+			print u.number
 
 class activity:
-	id = ''
-	participant_list = []
-	title = ''
-	info = ''
+	
+	def __init__(self):
+		id = ''
+		self.participant_list = []
+		self.title = ''
+		self.info = ''
 	def set_id(self,id):
 		self.id = id
 	def get_id(self):
@@ -97,12 +104,12 @@ class activity:
 		return -1
 
 class user:
-	id = ''
-	username = ''
-	user_week_time_table = timetable()
-	friendlist = []
+	
 	def __init__(self, id):
 		self.id = id
+		self.username = ''
+		self.user_week_time_table = timetable()
+		self.friendlist = []
 	def set_id(self,id):
 		self.id = id
 	def get_id(self):

@@ -9,37 +9,6 @@ app = Flask(__name__)
 # set the secret key.  keep this really secret:
 app.secret_key = '|G\x8f\x7f\x02\xb87\x9cYai\xc4D\x11\xd4\xf4j>\x1a\x15\xdc\x95l\x1f'
 
-@app.route("/", methods=['GET', 'POST'])
-def index():
-    if request.method == 'POST':
-        uid = request.form['uid']
-        udata = database.findUser("uid,uname",uid)
-        if(len(udata)!=0):
-            session['uid'] = udata[0][0]
-            session['username'] = udata[0][1]
-            render_template("index.html", uname=session['username'])
-        else:
-            render_template("hello.html", msg="No Such User")
-    if 'uid' in session:
-        return render_template("index.html", uname=session['username'])
-    return render_template("hello.html")
-
-@app.route("/getinv/",methods=['GET','POST'])
-def getinv():
-    if request.method == 'POST':
-        return json.dumps(database.findInv("iid,ititle,istate,icount",session['uid']))
-
-@app.route("/geteve/",methods=['GET','POST'])
-def geteve():
-    # to be modified
-    if request.method == 'POST':
-        return json.dumps(database.findInv("iid,ititle,istate,icount,icreator",session['uid']))
-
-@app.route('/logout')
-def logout():
-    session.pop('uid', None)
-    session.pop('username', None)
-    return redirect(url_for('index'))
 
 def update_user_calendar(usr,time_unit_list):
     usr.user_week_time_table.clear_timetable()
@@ -65,6 +34,44 @@ list3=[5,20,25,90]
 update_user_calendar(user1,list1)
 update_user_calendar(user2,list2)
 update_user_calendar(user3,list3)
+
+
+@app.route("/", methods=['GET', 'POST'])
+def index():
+    if request.method == 'POST':
+        uid = request.form['uid']
+        udata = database.findUser("uid,uname",uid)
+        if request.method == 'POST':
+              data = json.loads(request.get_json().encode("utf-8"))
+              default_bkdata['color3']=data['id']
+  		
+    bkdata= json.dumps(default_bkdata);
+ #       if(len(udata)!=0):
+ #           session['uid'] = udata[0][0]
+ #           session['username'] = udata[0][1]
+ #           render_template("index.html", uname=session['username'])
+ #      else:
+ #           render_template("hello.html", msg="No Such User")
+ #   if 'uid' in session:
+    return render_template("index.html", uname='username',bgcolor = bkdata)
+#    return render_template("hello.html")
+
+@app.route("/getinv/",methods=['GET','POST'])
+def getinv():
+    if request.method == 'POST':
+        return json.dumps(database.findInv("iid,ititle,istate,icount",session['uid']))
+
+@app.route("/geteve/",methods=['GET','POST'])
+def geteve():
+    # to be modified
+    if request.method == 'POST':
+        return json.dumps(database.findInv("iid,ititle,istate,icount,icreator",session['uid']))
+
+@app.route('/logout')
+def logout():
+    session.pop('uid', None)
+    session.pop('username', None)
+    return redirect(url_for('index'))
 
 
 def find_user_by_id(id):

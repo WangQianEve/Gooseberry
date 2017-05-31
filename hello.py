@@ -41,9 +41,6 @@ def index():
     if request.method == 'POST':
         uid = request.form['uid']
         udata = database.findUser("uid,uname",uid)
-        if request.method == 'POST':
-              data = json.loads(request.get_json().encode("utf-8"))
-              default_bkdata['color3']=data['id']
   		
     bkdata= json.dumps(default_bkdata);
  #       if(len(udata)!=0):
@@ -134,6 +131,16 @@ def user():
         bkdata= json.dumps(cal_color(usrlist));
         print bkdata
         return render_template("user.html",bgcolor = bkdata,friendlist=cur_user.friendlist)
+
+@app.route("/save_time/",methods=['POST','GET'])
+def save_time():
+        if request.method == 'POST':
+            data = json.loads(request.get_json().encode("utf-8"))
+            default_bkdata['color3']=data['id']
+			#save to the user
+            update_user_calendar(cur_user,default_bkdata['color3'])
+        bkdata= json.dumps(default_bkdata);
+        return bkdata
 
 @app.route("/get_color/",methods=['POST','GET'])
 def get_color():

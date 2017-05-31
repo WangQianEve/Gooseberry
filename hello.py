@@ -33,6 +33,11 @@ def geteve():
     if request.method == 'POST':
         return json.dumps(database.findInv("iid,ititle,istate,icount,icreator",session['uid']))
 
+@app.route("/getcon/",methods=['GET','POST'])
+def getcon():
+    if request.method == 'POST':
+        return json.dumps(database.findCon(session['uid']))
+
 @app.route('/logout')
 def logout():
     session.pop('uid', None)

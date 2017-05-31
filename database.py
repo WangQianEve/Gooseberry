@@ -6,22 +6,81 @@ import MySQLdb, random, string
 # timezone = 8
 page = "test"
 invpage = "invitations"
+conpage = "contacts"
+timepage = "times"
 IIDL = 20
-def addUser(page, uid, name, timezone = 8):
-    sql = "insert into %s (uid, uname, timezone) values ('%s','%s',%d)"% (page, uid, uname, timezone)
-    print sql
-    exe(sql)
-    return
-
-def deleteInv(iid):
-    sql = "delete from %s where iid='%s'"% (invpage, iid)
-    print sql
-    exe(sql)
-    return
-
+calendarW = 7
 def ranchar(i):
     return ''.join(random.sample(string.ascii_letters + string.digits, i))
 
+#User
+def addUser(page, uid, name, timezone = 8):
+    sql = "insert into %s (uid, uname, timezone) values ('%s','%s',%d)"% (page, uid, name, timezone)
+    print sql
+    exe(sql)
+    return
+
+def findUser(goal,uid):
+    sql = "select %s from %s where uid=\'%s\'" % (goal,page,uid)
+    print sql
+    return exe(sql)
+# contacts
+def makeCon():
+    sql ="CREATE TABLE IF NOT EXISTS "+conpage+"( \
+        %s VARCHAR(40) NOT NULL, \
+        %s VARCHAR(40) NOT NULL, \
+        %s VARCHAR(40) NOT NULL, \
+        %s VARCHAR(40) NOT NULL, \
+        PRIMARY KEY ( %s ) \
+    )ENGINE=InnoDB DEFAULT CHARSET=utf8;" % ("uid","fid","fname","fnickname", "uid")
+    exe(sql)
+    return
+
+def addCon(uid, fid, fname, fnickname):
+    sql = "insert into %s (uid, fid, fname, fnickname) values ('%s','%s','%s','%s' )"% (conpage, uid, fid, fname, fnickname)
+    print sql
+    exe(sql)
+
+def deleteCon(uid,fid):
+    sql = "delete from %s where uid='%s' and fid='%s'" % (conpage, uid, fid)
+    print sql
+    exe(sql)
+
+def findCon(uid):
+    goal = "fid,fname,fnickname"
+    sql = "select %s from %s where uid='%s' " % (goal,conpage,uid)
+    print sql
+    return exe(sql)
+#time
+def makeTime():
+    sql ="CREATE TABLE IF NOT EXISTS "+timepage+"( \
+        %s VARCHAR(40) NOT NULL, \
+        %s VARCHAR(40) NOT NULL, \
+        %s TIMESTAMP NOT NULL, \
+        %s TIMESTAMP NOT NULL, \
+        PRIMARY KEY ( %s ) \
+    )ENGINE=InnoDB DEFAULT CHARSET=utf8;" % ("uid","title","start","end", "uid")
+    exe(sql)
+    return
+
+def addTime(uid,title,start,end):
+    sql = "insert into %s (uid, title, start, end) values ('%s','%s','%s','%s' )"% (timepage,uid,title,start,end)
+    print sql
+    exe(sql)
+
+def deleteTime(uid, title, start, end):
+    sql = "delete from %s where uid='%s' and title='%s' and start='%s' and end='%s'" % (timepage,uid,title,start,end)
+    print sql
+    exe(sql)
+
+def findTime(uid, start):
+    goal = "title,start,end"
+    end = "timestampadd(day,%d,'%s')" % (calendarW,start)
+    sql = "select %s from %s where uid='%s' and ((start>='%s' and start<%s) or (end>'%s' and end<=%s))" % (goal,timepage,uid, start, end, start, end)
+    print sql
+    return exe(sql)
+
+#invitations
 def addInv(goal, data):
     iid = ranchar(IIDL)
     sql = "select iid from %s while iid=%s" % (invpage,iid)
@@ -33,16 +92,17 @@ def addInv(goal, data):
     exe(sql)
     return
 
-def findUser(goal,uid):
-    sql = "select %s from %s where uid=\'%s\'" % (goal,page,uid)
+def deleteInv(iid):
+    sql = "delete from %s where iid='%s'"% (invpage, iid)
     print sql
-    return exe(sql)
+    exe(sql)
+    return
 
 def findInv(goal,uid):
     sql = "select %s from %s where icreator='%s'" % (goal,invpage,uid)
     print sql
     return exe(sql)
-
+#others
 def createPage():
     sql = """
     CREATE TABLE invitations(
@@ -87,3 +147,11 @@ def exe(sql):
 #findInv("iid,ititle,istate,icount","evelynwang")
 #addInv("iid,ititle,istate,icount,icreator","'soa meeting','v',0,'evelynwang'")
 #deleteInv("py2wSVrsMI")
+# addUser(page,"wangxr","daniang")
+# makeCon()
+# addCon("evelynwang","wangxr","daniang","xinran")
+# print(findCon("evelynwang"))
+# makeTime()
+# addTime("wangxr","e","1705310000","1706010000")
+# deleteTime("eve","test2","1705310010","1705310111")
+# findTime("wangxr","170524")

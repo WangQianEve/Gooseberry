@@ -52,8 +52,24 @@
     });
     return true;
   }
-  function goose(){
-    
+  function getCon(){
+    $.ajax({
+      type: "POST",
+      url: "/getcon/",
+      cache: false,
+      success: function(data) {
+        var friendList = JSON.parse(data);
+        for ( str in friendList ){
+          uid = friendList[str][0];
+          uname = friendList[str][2];
+          if(uname==''){
+            uname = friendList[str][1];
+          }
+          $('#contactList').append("<label><input type=\"checkbox\" name=\"usercheckbox\" value="+uid+"> "+uname+" </label><br>");
+        }
+      }
+    });
+    return true;
   }
   </script>
 </head>
@@ -80,7 +96,7 @@
     <li class="active"><a data-toggle="tab" href="#calendar">Calendar</a></li>
     <li><a data-toggle="tab" href="#invitations" onclick="getInv()">Invitations</a></li>
     <li><a data-toggle="tab" href="#events" onclick="getEve()">Events</a></li>
-    <li><a data-toggle="tab" href="#contacts" onclick="goose()">Goose</a></li>
+    <li><a data-toggle="tab" href="#goose" onclick="getCon()">Goose</a></li>
   </ul>
 
   <div class="tab-content">
@@ -119,10 +135,11 @@
         </tbody>
       </table>
     </div>
-    <div id="contacts" class="tab-pane fade">
+    <div id="goose" class="tab-pane fade">
       <h3>Contacts</h3>
       <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
-      <a href="{{url_for('user', id='001' )}}"> EVELYN </a>
+      <ul id="contactList" style="list-style-type:circle;height:auto">
+      </ul>
     </div>
   </div>
 </div>

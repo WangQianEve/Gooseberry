@@ -7,7 +7,55 @@
   <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
   <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <script type="text/javascript" src="/static/script/index.js"></script>
+  <!-- <script type="text/javascript" src="/static/script/tabs.js"></script> -->
+  <script>
+  function getInv(){
+    $.ajax({
+      type: "POST",
+      url: "/getinv/",
+      cache: false,
+      success: function(data) {
+        document.getElementById("invTbody").innerHTML = "";
+        var obj = JSON.parse(data);
+        for ( str in obj ){
+          var status="unknown";
+          if(obj[str][2]=='v'){
+            status="voting";
+          }
+          else if (obj[str][2]=='f'){
+            status="finished";
+          }
+          $('#invTbody').append("<tr><td><a href=\"{{url_for('invitation',inv_id='"+obj[str][0]+"',host='true')}}\">"+obj[str][1]+"</a></td><td>"+status+"</td><td>"+obj[str][3]+"</td></tr>");
+        }
+      }
+    });
+    return true;
+  }
+  function getEve(){
+    $.ajax({
+      type: "POST",
+      url: "/geteve/",
+      cache: false,
+      success: function(data) {
+        var obj = JSON.parse(data);
+        for ( str in obj ){
+          var status="unknown";
+          if(obj[str][2]=='v'){
+            status="voting";
+          }
+          else if (obj[str][2]=='f'){
+            status="finished";
+          }
+          $('#invTbody').append("<tr><td><a href=\"{{url_for('invitation',inv_id='"+obj[str][0]+"',host='true')}}\">"+obj[str][1]+"</a></td><td>"+status+"</td><td>"+obj[str][3]+"</td><td>"+obj[str][4]+"</td></tr>");
+        }
+      }
+    });
+    return true;
+  }
+  function goose(){
+    
+  }
+  </script>
 </head>
 <body>
 
@@ -31,8 +79,8 @@
   <ul class="nav nav-tabs">
     <li class="active"><a data-toggle="tab" href="#calendar">Calendar</a></li>
     <li><a data-toggle="tab" href="#invitations" onclick="getInv()">Invitations</a></li>
-    <li><a data-toggle="tab" href="#events" >Events</a></li>
-    <li><a data-toggle="tab" href="#contacts" >Contacts</a></li>
+    <li><a data-toggle="tab" href="#events" onclick="getEve()">Events</a></li>
+    <li><a data-toggle="tab" href="#contacts" onclick="goose()">Goose</a></li>
   </ul>
 
   <div class="tab-content">
@@ -42,34 +90,32 @@
     </div>
     <div id="invitations" class="tab-pane fade">
       <h3>Invitations I started</h3>
-      <p>safsd.</p>
+      <p>to be filled.</p>
       <table class="table table-hover">
         <thead>
           <tr>
             <th>Title</th>
             <th>State</th>
-            <th>People</th>
+            <th>Votes</th>
           </tr>
         </thead>
         <tbody id="invTbody">
-          <tr><td><a href="{{url_for('invitation',inv_id='001')}}"> invitation 001 </a></td><td>voting</td><td>evelyn</td></tr>
         </tbody>
       </table>
     </div>
     <div id="events" class="tab-pane fade">
       <h3>Events I Joined</h3>
-      <p>blablabla.</p>
+      <p>to be filled.</p>
       <table class="table table-hover">
         <thead>
           <tr>
             <th>Title</th>
             <th>State</th>
-            <th>People</th>
+            <th>Votes</th>
             <th>Creator</th>
           </tr>
         </thead>
         <tbody id="eveTbody">
-          <tr><td><a href="{{url_for('invitation',inv_id='001')}}"> invitation 001 </a></td><td>voting</td><td>20</td><td>evelyn</td></tr>
         </tbody>
       </table>
     </div>

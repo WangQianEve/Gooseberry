@@ -2,6 +2,7 @@ from flask import Flask
 from flask import abort, redirect, url_for, render_template
 from flask import request, session
 import database
+import json
 app = Flask(__name__)
 # set the secret key.  keep this really secret:
 app.secret_key = '|G\x8f\x7f\x02\xb87\x9cYai\xc4D\x11\xd4\xf4j>\x1a\x15\xdc\x95l\x1f'
@@ -24,14 +25,13 @@ def index():
 @app.route("/getinv/",methods=['GET','POST'])
 def getinv():
     if request.method == 'POST':
-        return "yes gti"
-#        return database.findInv("iid,ititle,istate,icount",session['uid'])
+        return json.dumps(database.findInv("iid,ititle,istate,icount",session['uid']))
 
-@app.route("/getUinv/",methods=['GET','POST'])
-def getUinv():
+@app.route("/geteve/",methods=['GET','POST'])
+def geteve():
     # to be modified
     if request.method == 'POST':
-        return database.findUInv("iid,ititle,istate,icount",session['uid'])
+        return json.dumps(database.findInv("iid,ititle,istate,icount,icreator",session['uid']))
 
 @app.route('/logout')
 def logout():

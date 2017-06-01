@@ -277,13 +277,14 @@
 					var tmp = (x0*linenum+y0+i);
 					//console.log("tmp:"+tmp);
 					var t_index = (tmp%linenum)*7+(parseInt(tmp/linenum));
-					//console.log("t_index:"+t_index);
-					if(tds[this.index].style.backgroundColor == colorlist[3]){
+					console.log("t_index:"+t_index);
+					if(tds[start_index].style.backgroundColor == colorlist[0]){
 						tds[t_index].style.backgroundColor = colorlist[0];
+						
 					}
 					else {
 						tds[t_index].style.backgroundColor = colorlist[3];
-						start_index = this.index;
+					
 					}
 				}
 			}
@@ -291,6 +292,7 @@
 				if(tds[this.index].style.backgroundColor == colorlist[3]){
 					console.log("switch to white!");
 					tds[this.index].style.backgroundColor = colorlist[0];
+					start_index = this.index;
 				}
 				else {
 					console.log("switch to purple!");

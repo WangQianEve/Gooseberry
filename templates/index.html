@@ -454,7 +454,8 @@
 	
 	function save_activity(){
 		var tag_text = $('#tag_text').val();
-		selectedlist.sort();
+		selectedlist.sort(function(a,b){
+      return a-b});
 		console.log("selectedlist:"+selectedlist);
 		//for(var i = 0; i < selectedlist.length; i++){
 		//	tds[selectedlist[i]].innerText = tag_text;

@@ -174,6 +174,20 @@ def save_activity():
 			#todo
 			#database.addTime()
 		return json.dumps(new_act)
+		
+@app.route("/delete_activity/",methods=['POST','GET'])
+def delete_activity():
+		delete_act = json.dumps({"title":'',"start":0,"end":0})
+		if request.method == 'POST':
+			del_act = json.loads(request.get_json().encode("utf-8"))
+			print "del act!!"
+			print del_act
+			#update user data
+			
+			#save to the database
+			#todo
+			#database.deleteTime()
+		return json.dumps(del_act)
 
 @app.route("/get_color/",methods=['POST','GET'])
 def get_color():

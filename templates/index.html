@@ -443,7 +443,7 @@
 			tds[i].style.backgroundColor = colorlist[0];
 		}
 		selectedlist=[];
-		set_color_by_selectedlist();
+		render_table_data();
 		//clear the table data?
 		//todo
 	}
@@ -462,7 +462,6 @@
 		//}
 		//not empty
 		if(selectedlist.length > 0){
-			console
 			var new_act = {"title":tag_text,"start":selectedlist[0],"end":selectedlist[selectedlist.length-1]};
 			var new_act_json = JSON.stringify(new_act);
 			
@@ -509,12 +508,33 @@
 			var num = selectedlist[i];
 			var tmp = index_in_activity(num);
 			if(tmp != -1){
+				var del_act = table_data.time[tmp];
+				var del_act_json = JSON.stringify(del_act);
+				
 				table_data.time.splice(tmp,1);
+				
+				//send the data
+				$.ajax({
+					type: 'POST',
+					url: "/delete_activity/",
+					data: JSON.stringify(del_act_json), 
+					contentType: 'application/json; charset=UTF-8',
+					dataType: 'json', 
+					success: function(data) { 
+						console.log("sent")
+						console.log(data)
+					},
+					error: function(e) {
+					console.log(e)
+					}
+				});
+				
+				//clear the selectedlist
+				selectedlist=[];		
+				render_table_data();
 			}
 		}
-		//clear the selectedlist
-		selectedlist=[];		
-		render_table_data();
+		
 		
 	}
 	</script>

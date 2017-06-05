@@ -35,7 +35,49 @@ def logout():
     session.pop('username', None)
     return redirect(url_for('index'))
 
-# 
+#
+@app.route("/searchpeople/",methods=['GET','POST'])
+def searchpeople():
+    if request.method == 'POST':
+        searchText = request.data.split(';');
+        print(searchText)
+        uid=session['uid']
+        frList=[]
+        nofrList=[]
+        noPerList=[]
+        # for fid in searchText:
+        #     t = database.findCon(uid,fid.strip())
+        #     if len(t)>0:
+        #         frList.append(t[0])
+        #     else:
+        #         t = database.findUser("id,name",fid)
+        #         if len(t)>0:
+        #             nofrList.append(t[0])
+        #         else:
+        #             noPerList.append(fid)
+        result = {}
+        result['friends']=frList
+        result['strangers']=nofrList
+        result['wrong']=noPerList
+        return json.dumps(result)
+
+@app.route("/addcon/")
+def addcon():
+    uid=session['uid']
+    fid=request.args.get('id')
+    fname=request.args.get('name')
+    database.addCon(uid,fid,fname,"")
+    return "success"
+
+@app.route("/setnickname/")
+def setnickname():
+    uid=session['uid']
+    fid=request.args.get('id')
+    fname=request.args.get('name')
+    fnickname = request.args.get('nickname')
+    database.addCon(uid,fid,fname,fnickname)
+    return "success"
+
 @app.route("/getinv/",methods=['GET','POST'])
 def getinv():
     if request.method == 'POST':

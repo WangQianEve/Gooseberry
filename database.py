@@ -37,10 +37,15 @@ def deleteCon(uid,fid):
     exe(sql)
 
 def findCon(uid):
-    goal = "fid,fname,fnickname"
+    goal = "id,name,nickname"
     sql = "select %s from %s where uid='%s' " % (goal,conpage,uid)
-    print sql
     return exe(sql)
+
+def findCon(uid,id):
+    goal = "name,nickname"
+    sql = "select %s from %s where uid='%s' and id='%s' " % (goal,conpage,uid,id)
+    return exe(sql)
+
 #time
 def addTime(uid,title,start,end):
     sql = "insert into %s (uid, title, start, end) values ('%s','%s','%s','%s' )"% (timepage,uid,title,start,end)

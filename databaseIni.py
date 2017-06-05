@@ -50,7 +50,7 @@ def createPages():
     exe(sql)
 
 def exe(sql):
-    db = MySQLdb.connect(host='127.0.0.1',port = 3306,user='root', passwd='',db ='gooseberry')
+    db = MySQLdb.connect(host='localhost',port = 3306,user='root', passwd='',db ='gooseberry')
     cursor = db.cursor()
     results = []
     try:
@@ -62,3 +62,5 @@ def exe(sql):
     db.close()
     print results
     return results
+
+createPages()

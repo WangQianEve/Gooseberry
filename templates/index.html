@@ -9,6 +9,72 @@
   <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <!-- <script type="text/javascript" src="/static/script/tabs.js"></script> -->
   <script>
+  $(document).ready(function(){
+    alert("in");
+    $('#nickname1').keydown(function(e){
+      var key= e.which;
+      if (key==13){
+        alert("hh");
+        // alert(this.value);
+        // $.ajax({
+        //   type: "GET",
+        //   url: "/setnickname/",
+        //   data: {
+        //     'id':fid,//
+        //     'name':name,//
+        //     'nickname':this.value,
+        //   }
+        // });
+      }
+    });
+    // $('#nickname').blur(function(){
+    //   alert("ss");
+    // });
+    // $('#searchFriendBtn').click(function(){
+    //   alert("he");
+      // var searchText = $('#searchFriendText').value;
+      // alert(searchText);
+      // $.ajax({
+      //   type: "POST",
+      //   url: "/searchpeople/",
+      //   cache: false,
+      //   data: searchText,
+      //   success: function(data) {
+      //     alert(data);
+      //     var list= document.getElementById("searchResult");
+      //     list.innerHTML = "";
+      //     var obj = JSON.parse(data);
+      //     for(n in obj['strangers']){
+      //       alert(n);
+      //       // list.append("""
+      //       // <li class='list-group-item' id='"+obj[n][1]+"'> \
+      //       //   <font size='4'>"+obj[n][0]"</font> \
+      //       //   <font size='1' color='grey'>备注：<input type='text' id='nickname' value='"+obj[n][2]"'></input></font> \
+      //       //   <button style='float:right' type='button' onclick='addcon("+obj[n][1]+","+obj[n][0]+")' class='btn btn-info'>+ Add  </button> \
+      //       //   </br> \
+      //       //   <font size='2' color='grey'> "+obj[n][1]"</font> \
+      //       // </li> \
+      //       // """);
+      //     }
+      //   }
+      // });
+    // });
+  });
+  function addcon(fid,name){
+    $.ajax({
+      type: "GET",
+      url: "/addcon/",
+      data: {
+        'id':fid,
+        'name':name,
+      }
+      cache: false,
+      success: function() {
+        document.getElementById("fid").innerHTML = "";
+        $('#'+fid).append("tobe continued");
+      }
+    });
+  }
   function getInv(){
     $.ajax({
       type: "POST",
@@ -137,10 +203,62 @@
     </div>
     <div id="goose" class="tab-pane fade">
       <h3>Contacts</h3>
-      <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
-      <ul id="contactList" style="list-style-type:circle;height:auto">
-      </ul>
+      <p>aperiam.</p>
+      <div class="col-sm-3">
+        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#addFriendModal">+ Add Friend</button>
+        <ul id="contactList" style="list-style-type:circle;height:auto">
+        </ul>
+      </div>
     </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div id="addFriendModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Search Friend with Email or ID</h4>
+      </div>
+      <div class="modal-body" id="friendSearchResult">
+        <div class="row">
+            <div class="form-group col-sm-10">
+              <input id="searchFriendText" type="text" class="form-control" name="id" placeholder="Enter email or id, seperate with ';' ">
+            </div>
+            <div class="form-group col-sm-2">
+              <button id="searchFriendBtn" style="float:right" class="btn btn-default">Search</button>
+            </div>
+        </div>
+        </br>
+        <ul class="list-group" id="searchResult">
+          <li class='list-group-item'>
+            <font size='4'>WangQian</font>
+            <font size='1' color='grey'>备注：<input type='text' id='nickname1' value='小倩倩'></input></font>
+            <button style='float:right' type='button' class='btn btn-info'>+ Add  </button>
+            </br>
+            <font size='2' color='grey'>ID : eli_home@outlook.com</font>
+          </li>
+          <li class="list-group-item">
+            <font size="4">WangQian</font>
+            <font size="1" color="grey">备注：<input type="text" id="nickname2" value="小倩倩"></input></font>
+            <button style="float:right" type="button" class="btn btn-error">Delete</button>
+            </br>
+            <font size="2" color="grey">ID : eli_home@outlook.com</font>
+          </li>
+          <li class="list-group-item">
+            <font size="4">WangQian</font>
+            <font size="1" color="grey">备注：<input type="text" id="nickname3" value="小倩倩"></input></font>
+            <button style="float:right" type="button" class="btn btn-info">+ Add</button>
+            </br>
+            <font size="2" color="grey">ID : eli_home@outlook.com</font>
+          </li>
+        </ul>
+      </div>
+    </div>
+
   </div>
 </div>
 

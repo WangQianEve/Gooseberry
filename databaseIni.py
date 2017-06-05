@@ -11,6 +11,10 @@ def cleanDb():
         sql = "DROP TABLE IF EXISTS "+page
         exe(sql)
 
+def createDb(db):
+    sql = "CREATE DATABASE "+db
+    exe(sql)
+
 def createPages():
     sql ="CREATE TABLE IF NOT EXISTS "+userPage+"( \
         %s VARCHAR(40) NOT NULL, \
@@ -62,3 +66,6 @@ def exe(sql):
     db.close()
     print results
     return results
+
+createDb("gooseberry")
+createPages()

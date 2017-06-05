@@ -4,38 +4,28 @@ import MySQLdb, random, string
 # uid = "evelynwang"
 # uname = "evelyn"
 # timezone = 8
-page = "test"
-invpage = "invitations"
-conpage = "contacts"
-timepage = "times"
-IIDL = 20
+userPage = "users"
+invitationPage = "invitations"
+contactPage = "contacts"
+timePage = "times"
+
+InvIdLength = 20
 calendarW = 7
+
 def ranchar(i):
     return ''.join(random.sample(string.ascii_letters + string.digits, i))
 
 #User
-def addUser(page, uid, name, timezone = 8):
-    sql = "insert into %s (uid, uname, timezone) values ('%s','%s',%d)"% (page, uid, name, timezone)
-    print sql
+def addUser(uid, psw, name, timezone):
+    sql = "insert into %s (id, psw, name, timezone) values ('%s','%s','%s',%d)"% (userPage, uid, psw, name, timezone)
     exe(sql)
-    return
 
 def findUser(goal,uid):
-    sql = "select %s from %s where uid=\'%s\'" % (goal,page,uid)
-    print sql
+    sql = "select %s from %s where id='%s'" % (goal,userPage,uid)
     return exe(sql)
-# contacts
-def makeCon():
-    sql ="CREATE TABLE IF NOT EXISTS "+conpage+"( \
-        %s VARCHAR(40) NOT NULL, \
-        %s VARCHAR(40) NOT NULL, \
-        %s VARCHAR(40) NOT NULL, \
-        %s VARCHAR(40) NOT NULL, \
-        PRIMARY KEY ( %s ) \
-    )ENGINE=InnoDB DEFAULT CHARSET=utf8;" % ("uid","fid","fname","fnickname", "uid")
-    exe(sql)
-    return
+# modify name or psw or timezone
 
+# contacts
 def addCon(uid, fid, fname, fnickname):
     sql = "insert into %s (uid, fid, fname, fnickname) values ('%s','%s','%s','%s' )"% (conpage, uid, fid, fname, fnickname)
     print sql
@@ -52,17 +42,6 @@ def findCon(uid):
     print sql
     return exe(sql)
 #time
-def makeTime():
-    sql ="CREATE TABLE IF NOT EXISTS "+timepage+"( \
-        %s VARCHAR(40) NOT NULL, \
-        %s VARCHAR(40) NOT NULL, \
-        %s TIMESTAMP NOT NULL, \
-        %s TIMESTAMP NOT NULL, \
-        PRIMARY KEY ( %s ) \
-    )ENGINE=InnoDB DEFAULT CHARSET=utf8;" % ("uid","title","start","end", "uid")
-    exe(sql)
-    return
-
 def addTime(uid,title,start,end):
     sql = "insert into %s (uid, title, start, end) values ('%s','%s','%s','%s' )"% (timepage,uid,title,start,end)
     print sql
@@ -103,25 +82,6 @@ def findInv(goal,uid):
     print sql
     return exe(sql)
 #others
-def createPage():
-    sql = """
-    CREATE TABLE invitations(
-    iid VARCHAR(10) NOT NULL,
-    ititle VARCHAR(40) NOT NULL,
-    istate VARCHAR(1) NOT NULL,
-    icount INT NOT NULL,
-    icreator varchar(40) not null
-    PRIMARY KEY ( iid )
-    )ENGINE=InnoDB DEFAULT CHARSET=utf8;
-    """
-    sql = """
-    CREATE TABLE invitations(
-    uid VARCHAR(40) NOT NULL,
-    uname VARCHAR(40) NOT NULL
-    PRIMARY KEY ( iid )
-    )ENGINE=InnoDB DEFAULT CHARSET=utf8;
-    """
-
 def changePage():
     sql = """
     alter table invitations MODIFY iid VARCHAR(20);
@@ -132,6 +92,7 @@ def changePage():
 # delete from page where d=4
 
 def exe(sql):
+    print sql
     db = MySQLdb.connect(host='127.0.0.1',port = 3306,user='root', passwd='',db ='gooseberry')
     cursor = db.cursor()
     results = []

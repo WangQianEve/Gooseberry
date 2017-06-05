@@ -10,18 +10,32 @@ app.secret_key = '|G\x8f\x7f\x02\xb87\x9cYai\xc4D\x11\xd4\xf4j>\x1a\x15\xdc\x95l
 @app.route("/", methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
-        uid = request.form['uid']
-        udata = database.findUser("uid,uname",uid)
-        if(len(udata)!=0):
-            session['uid'] = udata[0][0]
-            session['username'] = udata[0][1]
-            render_template("index.html", uname=session['username'])
+        uid = request.form['id']
+        psw = request.form['psw']
+        result = database.findUser("psw,name",uid)
+        if len(result) > 0 and result[0][0]==psw :
+            session['uid']= uid
+            session['username']=result[0][1]
+            return render_template("index.html", uname=session['username'])
         else:
-            render_template("hello.html", msg="No Such User")
+            return render_template("hello.html", msg="User ID or Password wrong!")
     if 'uid' in session:
         return render_template("index.html", uname=session['username'])
     return render_template("hello.html")
 
+@app.route("/signup",methods =['GET','POST'])
+def signup():
+    if request.method == 'POST':
+        database.addUser(request.form['id'],request.form['psw'],request.form['name'],8)
+        return render_template("hello.html", msg="Sign Up Succeed!")
+
+@app.route('/logout')
+def logout():
+    session.pop('uid', None)
+    session.pop('username', None)
+    return redirect(url_for('index'))
+
+# 
 @app.route("/getinv/",methods=['GET','POST'])
 def getinv():
     if request.method == 'POST':
@@ -37,12 +51,6 @@ def geteve():
 def getcon():
     if request.method == 'POST':
         return json.dumps(database.findCon(session['uid']))
-
-@app.route('/logout')
-def logout():
-    session.pop('uid', None)
-    session.pop('username', None)
-    return redirect(url_for('index'))
 
 # evoked by user.html
 @app.route("/createInvitation/")

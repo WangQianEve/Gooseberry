@@ -7,6 +7,8 @@ class timeunit:
 	number = 0
 	#0 -- available, 1 -- unavailable, 2 -- don't want to be bothered 
 	status = 0
+	#information about this time unit
+	tag = ''
 	# A timepiece contains half an hour 
 	#length = 0.5
 	
@@ -14,10 +16,12 @@ class timeunit:
 		self.date = date
 		self.number = number
 		self.status = 0
-	def __init__(self, date, number,status):
+		self.tag = 'default'
+	def __init__(self, date, number, status, tag):
 		self.date = date
 		self.number = number
 		self.status = status
+		self.tag = tag
 		
 	def set_status(self, new_status):
 		self.status = new_status
@@ -25,6 +29,8 @@ class timeunit:
 		self.date = new_date
 	def set_number(self, new_number):
 		self.number = new_number
+	def set_tag(self, new_tag):
+		self.tag = new_tag
 	
 	def get_status(self):
 		return self.status
@@ -32,6 +38,8 @@ class timeunit:
 		return self.date
 	def get_number(self):
 		return self.number
+	def get_tag(self):
+		return self.tag
 		
 class timetable:
 	time_unit_num = 7*36
@@ -39,9 +47,9 @@ class timetable:
 	
 	def __init__(self):
 		self.week_table = []
-	def add_time_unit(self, date, number, status):
+	def add_time_unit(self, date, number, status, tag):
 		if(number < self.time_unit_num):
-			new_unit = timeunit(date,number,status)
+			new_unit = timeunit(date,number,status,tag)
 			self.week_table.append(new_unit)
 	def del_time_unit(self, index):
 		del self.week_table[index]

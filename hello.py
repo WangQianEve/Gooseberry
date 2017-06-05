@@ -13,10 +13,10 @@ app.secret_key = '|G\x8f\x7f\x02\xb87\x9cYai\xc4D\x11\xd4\xf4j>\x1a\x15\xdc\x95l
 def update_user_calendar(usr,time_unit_list):
     usr.user_week_time_table.clear_timetable()
     for i in time_unit_list:
-        usr.user_week_time_table.add_time_unit(cur_date,i,1)
+        usr.user_week_time_table.add_time_unit(cur_date,i,1,'default')
 
 #Make some data to use
-time_amount = 7*36
+time_amount = 7*24
 cur_date = 20170101
 user1 = user(001)
 user2 = user(002)
@@ -42,7 +42,9 @@ def index():
         uid = request.form['uid']
         udata = database.findUser("uid,uname",uid)
   		
-    bkdata= json.dumps(default_bkdata);
+    bkdata= json.dumps(default_bkdata)
+    table_data = json.dumps(get_table_info_by_usr(cur_user))
+    print table_data
  #       if(len(udata)!=0):
  #           session['uid'] = udata[0][0]
  #           session['username'] = udata[0][1]
@@ -50,24 +52,31 @@ def index():
  #      else:
  #           render_template("hello.html", msg="No Such User")
  #   if 'uid' in session:
-    return render_template("index.html", uname='username',bgcolor = bkdata)
+    return render_template("index.html", uname='username',bgcolor = bkdata,table_data=table_data)
 #    return render_template("hello.html")
 
+###############################
+#Comment out things with session
+#
+###############################
 @app.route("/getinv/",methods=['GET','POST'])
 def getinv():
     if request.method == 'POST':
-        return json.dumps(database.findInv("iid,ititle,istate,icount",session['uid']))
+#        return json.dumps(database.findInv("iid,ititle,istate,icount",session['uid']))
+        return json.dumps({data:"findInv"})
 
 @app.route("/geteve/",methods=['GET','POST'])
 def geteve():
     # to be modified
     if request.method == 'POST':
-        return json.dumps(database.findInv("iid,ititle,istate,icount,icreator",session['uid']))
+#        return json.dumps(database.findInv("iid,ititle,istate,icount,icreator",session['uid']))
+        return json.dumps({data:"geteve"})
 
 @app.route("/getcon/",methods=['GET','POST'])
 def getcon():
     if request.method == 'POST':
-        return json.dumps(database.findCon(session['uid']))
+#        return json.dumps(database.findCon(session['uid']))
+        return json.dumps({data:"getcon"})
 
 @app.route('/logout')
 def logout():
@@ -75,6 +84,10 @@ def logout():
     session.pop('username', None)
     return redirect(url_for('index'))
 
+def get_table_info_by_usr(usr):
+	event_list = []
+	table_data = {"time" : [{"title":"act 1","start":"1","end":"5"},{"title":"act 2","start":"20","end":"36"}]}
+	return table_data
 
 def find_user_by_id(id):
     for i in total_user:
@@ -88,12 +101,13 @@ def cal_color(usrlist):
 	#Count the times of each time unit
     for i in usrlist:
         usr = find_user_by_id(int(i))
-        #usr.user_week_time_table.print_timetable()
-        for k in usr.user_week_time_table.week_table:
-            if not str(k.get_number()) in tmpdict:
-                tmpdict[str(k.get_number())] = 1
-            else:
-                tmpdict[str(k.get_number())] += 1
+        if(usr != None):
+			#usr.user_week_time_table.print_timetable()
+			for k in usr.user_week_time_table.week_table:
+				if not str(k.get_number()) in tmpdict:
+					tmpdict[str(k.get_number())] = 1
+				else:
+					tmpdict[str(k.get_number())] += 1
 
     for key in tmpdict:
         #print 'key: '+key+'  '+str(tmpdict[key])
@@ -146,6 +160,20 @@ def save_time():
             update_user_calendar(cur_user,default_bkdata['color3'])
         bkdata= json.dumps(default_bkdata);
         return bkdata
+
+@app.route("/save_activity/",methods=['POST','GET'])
+def save_activity():
+		new_act = json.dumps({"title":'',"start":0,"end":0})
+		if request.method == 'POST':
+			new_act = json.loads(request.get_json().encode("utf-8"))
+			print "new act!!"
+			print new_act
+			#update user data
+			
+			#save to the database
+			#todo
+			#database.addTime()
+		return json.dumps(new_act)
 
 @app.route("/get_color/",methods=['POST','GET'])
 def get_color():

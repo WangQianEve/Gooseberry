@@ -38,42 +38,128 @@ update_user_calendar(user3,list3)
 
 @app.route("/", methods=['GET', 'POST'])
 def index():
-    if request.method == 'POST':
-        uid = request.form['uid']
-        udata = database.findUser("uid,uname",uid)
-    usrlist = [cur_user.id]
+
+    usrlist = []
 
     print usrlist
     bkdata= json.dumps(cal_color(usrlist));
-    #bkdata= json.dumps(default_bkdata)
-    table_data = json.dumps(get_table_info_by_usr(cur_user))
-    print table_data
- #       if(len(udata)!=0):
- #           session['uid'] = udata[0][0]
- #           session['username'] = udata[0][1]
- #           render_template("index.html", uname=session['username'])
- #      else:
- #           render_template("hello.html", msg="No Such User")
- #   if 'uid' in session:
-    return render_template("index.html", uname='username',bgcolor = bkdata,table_data=table_data,friendlist=cur_user.friendlist)
-#    return render_template("hello.html")
+    
+    
+    
+    if request.method == 'POST':
+        uid = request.form['id']
+        psw = request.form['psw']
+        result = database.findUser("psw,name",uid)
+        if len(result) > 0 and result[0][0]==psw :
+            session['uid']= uid
+            session['username']=result[0][1]
+			cur_user = user(uid)
+			table_data = json.dumps(get_table_info_by_usr(cur_user))
+            return render_template("index.html", uname=session['username'],bgcolor = bkdata,table_data=table_data,friendlist=cur_user.friendlist)
+        else:
+            return render_template("hello.html", msg="User ID or Password wrong!")
+    if 'uid' in session:
+		cur_user = user(session['uid'])
+		table_data = json.dumps(get_table_info_by_usr(cur_user))
+        return render_template("index.html", uname=session['username'],bgcolor = bkdata,table_data=table_data,friendlist=cur_user.friendlist)
+    return render_template("hello.html")
 
-###############################
-#Comment out things with session
+@app.route("/signup",methods =['GET','POST'])
+def signup():
+    if request.method == 'POST':
+        database.addUser(request.form['id'],request.form['psw'],request.form['name'],8)
+        return render_template("hello.html", msg="Sign Up Succeed!")
+
+@app.route('/logout')
+def logout():
+    session.pop('uid', None)
+    session.pop('username', None)
+    return redirect(url_for('index'))
+
 #
-###############################
+@app.route("/searchpeople/",methods=['GET','POST'])
+def searchpeople():
+    if request.method == 'POST':
+        searchText = request.values.get('ids').split(';');
+        uid=session['uid']
+        frList=[]
+        nofrList=[]
+        noPerList=[]
+        for fid in searchText:
+            t = database.relation(uid,fid.strip())
+            print(t)
+            if len(t)>0:
+                frList.append(t[0])
+            else:
+                print(t)
+                t = database.findUser("id,name",fid)
+                if len(t)>0:
+                    nofrList.append(t[0])
+                else:
+                    noPerList.append(fid)
+        result = {}
+        result['friends']=frList
+        result['strangers']=nofrList
+        result['wrong']=noPerList
+        print result
+        return json.dumps(result)
+
+@app.route("/addcon/")
+def addcon():
+    uid=session['uid']
+    fid=request.args.get('id')
+    fname=request.args.get('name')
+    database.addCon(uid,fid,fname,"")
+    return "success"
+
+@app.route("/delcon/")
+def delcon():
+    uid=session['uid']
+    fid=request.args.get('id')
+    database.delCon(uid,fid)
+    return "success"
+
+@app.route("/setnickname/")
+def setnickname():
+    uid=session['uid']
+    fid=request.args.get('id')
+    fnickname = request.args.get('nickname')
+    results = database.updateCon(uid,fid,"nickname",fnickname)
+    if isinstance(results,(list)):
+        return "error"
+    else:
+        return "success"
+
 @app.route("/getinv/",methods=['GET','POST'])
 def getinv():
     if request.method == 'POST':
-#        return json.dumps(database.findInv("iid,ititle,istate,icount",session['uid']))
-        return json.dumps({data:"findInv"})
-
+        return json.dumps(database.findInvByCreator("iid,ititle,istate,icount",session['uid']))
+		
 @app.route("/geteve/",methods=['GET','POST'])
 def geteve():
-    # to be modified
     if request.method == 'POST':
-#        return json.dumps(database.findInv("iid,ititle,istate,icount,icreator",session['uid']))
-        return json.dumps({data:"geteve"})
+        ids = json.loads(database.findUser("invitations", session['uid'])[0][0])
+        print ids
+        flag = False
+        results = []
+        for iid in ids:
+            t = database.findInvById("id,title,state,count,creator",iid)
+            if len(t)==0:
+                ids.remove(iid)
+                flag = True
+            else:
+                results.append(t[0])
+        if flag:
+            database.updateUser('invitations',json.dumps(ids),session['uid'])
+        return json.dumps(results)
+
+@app.route("/joinInv/")
+def joinInv():
+    invId = request.args.get('inv')
+    uid = session['uid']
+    database.invAddMember(invId,uid)
+    database.userAddInv(invId,uid)
+
 
 @app.route("/getcon/",methods=['GET','POST'])
 def getcon():
@@ -81,11 +167,6 @@ def getcon():
 #        return json.dumps(database.findCon(session['uid']))
         return json.dumps({data:"getcon"})
 
-@app.route('/logout')
-def logout():
-    session.pop('uid', None)
-    session.pop('username', None)
-    return redirect(url_for('index'))
 
 def get_table_info_by_usr(usr):
 	event_list = []
@@ -127,6 +208,7 @@ def cal_color(usrlist):
         else:
             color_data["color3"].append(int(key))
     return color_data
+
 
 # evoked by user.html
 @app.route("/createInvitation/")

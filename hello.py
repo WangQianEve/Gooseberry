@@ -41,8 +41,11 @@ def index():
     if request.method == 'POST':
         uid = request.form['uid']
         udata = database.findUser("uid,uname",uid)
-  		
-    bkdata= json.dumps(default_bkdata)
+    usrlist = [cur_user.id]
+
+    print usrlist
+    bkdata= json.dumps(cal_color(usrlist));
+    #bkdata= json.dumps(default_bkdata)
     table_data = json.dumps(get_table_info_by_usr(cur_user))
     print table_data
  #       if(len(udata)!=0):
@@ -52,7 +55,7 @@ def index():
  #      else:
  #           render_template("hello.html", msg="No Such User")
  #   if 'uid' in session:
-    return render_template("index.html", uname='username',bgcolor = bkdata,table_data=table_data)
+    return render_template("index.html", uname='username',bgcolor = bkdata,table_data=table_data,friendlist=cur_user.friendlist)
 #    return render_template("hello.html")
 
 ###############################

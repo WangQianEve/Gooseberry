@@ -43,9 +43,9 @@ def index():
 
     print usrlist
     bkdata= json.dumps(cal_color(usrlist));
-    
-    
-    
+
+
+
     if request.method == 'POST':
         uid = request.form['id']
         psw = request.form['psw']
@@ -53,14 +53,14 @@ def index():
         if len(result) > 0 and result[0][0]==psw :
             session['uid']= uid
             session['username']=result[0][1]
-			cur_user = user(uid)
-			table_data = json.dumps(get_table_info_by_usr(cur_user))
+            cur_user = user(uid)
+            table_data = json.dumps(get_table_info_by_usr(cur_user))
             return render_template("index.html", uname=session['username'],bgcolor = bkdata,table_data=table_data,friendlist=cur_user.friendlist)
         else:
             return render_template("hello.html", msg="User ID or Password wrong!")
     if 'uid' in session:
-		cur_user = user(session['uid'])
-		table_data = json.dumps(get_table_info_by_usr(cur_user))
+        cur_user = user(session['uid'])
+        table_data = json.dumps(get_table_info_by_usr(cur_user))
         return render_template("index.html", uname=session['username'],bgcolor = bkdata,table_data=table_data,friendlist=cur_user.friendlist)
     return render_template("hello.html")
 
@@ -134,7 +134,7 @@ def setnickname():
 def getinv():
     if request.method == 'POST':
         return json.dumps(database.findInvByCreator("iid,ititle,istate,icount",session['uid']))
-		
+
 @app.route("/geteve/",methods=['GET','POST'])
 def geteve():
     if request.method == 'POST':
@@ -169,13 +169,13 @@ def getcon():
 
 
 def get_table_info_by_usr(usr):
-	event_list = []
-	table_data = {"time" : [{"title":"act 1","start":"1","end":"5"},{"title":"act 2","start":"20","end":"36"}]}
-	#get data from database by user id
-	#all activities
-	#date
-	#todo
-	return table_data
+    event_list = []
+    table_data = {"time" : [{"title":"act 1","start":"1","end":"5"},{"title":"act 2","start":"20","end":"36"}]}
+    #get data from database by user id
+    #all activities
+    #date
+    #todo
+    return table_data
 
 def find_user_by_id(id):
     for i in total_user:
@@ -186,18 +186,18 @@ def find_user_by_id(id):
 def cal_color(usrlist):
     color_data ={"color1":[],"color2":[],"color3":[]}
     tmpdict={}
-	#Count the times of each time unit
-	#todo
-	#get users'data from database
+    #Count the times of each time unit
+    #todo
+    #get users'data from database
     for i in usrlist:
         usr = find_user_by_id(int(i))
         if(usr != None):
-			#usr.user_week_time_table.print_timetable()
-			for k in usr.user_week_time_table.week_table:
-				if not str(k.get_number()) in tmpdict:
-					tmpdict[str(k.get_number())] = 1
-				else:
-					tmpdict[str(k.get_number())] += 1
+            #usr.user_week_time_table.print_timetable()
+            for k in usr.user_week_time_table.week_table:
+                if not str(k.get_number()) in tmpdict:
+                    tmpdict[str(k.get_number())] = 1
+                else:
+                    tmpdict[str(k.get_number())] += 1
 
     for key in tmpdict:
         #print 'key: '+key+'  '+str(tmpdict[key])
@@ -221,64 +221,43 @@ def createInvitation():
     # else:
     #     return 0
 
-@app.route("/user/", methods=['GET', 'POST'])
-def user():
-    if request.method == 'POST':
-        # add into database
-        print(request.form['title'])
-        return "001"
-    else:
-    # if not signed-in:
-    #     return redirect(url_for('hello'))
-    # else:
-        usrlist = [cur_user.id]
-        if request.method == 'POST':
-            usrdata = json.loads(request.get_json().encode("utf-8"))
-            usrlist = usrdata['id']
-            usrlist.append(cur_user.id)
-
-        print usrlist
-        bkdata= json.dumps(cal_color(usrlist));
-        print bkdata
-        return render_template("user.html",bgcolor = bkdata,friendlist=cur_user.friendlist)
-
 @app.route("/save_time/",methods=['POST','GET'])
 def save_time():
         if request.method == 'POST':
             data = json.loads(request.get_json().encode("utf-8"))
             default_bkdata['color3']=data['id']
-			#save to the user
+            #save to the user
             update_user_calendar(cur_user,default_bkdata['color3'])
         bkdata= json.dumps(default_bkdata);
         return bkdata
 
 @app.route("/save_activity/",methods=['POST','GET'])
 def save_activity():
-		new_act = json.dumps({"title":'',"start":0,"end":0})
-		if request.method == 'POST':
-			new_act = json.loads(request.get_json().encode("utf-8"))
-			print "new act!!"
-			print new_act
-			#update user data
-			
-			#save to the database
-			#todo
-			#database.addTime()
-		return json.dumps(new_act)
-		
+        new_act = json.dumps({"title":'',"start":0,"end":0})
+        if request.method == 'POST':
+            new_act = json.loads(request.get_json().encode("utf-8"))
+            print "new act!!"
+            print new_act
+            #update user data
+
+            #save to the database
+            #todo
+            #database.addTime()
+        return json.dumps(new_act)
+
 @app.route("/delete_activity/",methods=['POST','GET'])
 def delete_activity():
-		delete_act = json.dumps({"title":'',"start":0,"end":0})
-		if request.method == 'POST':
-			del_act = json.loads(request.get_json().encode("utf-8"))
-			print "del act!!"
-			print del_act
-			#update user data
-			
-			#save to the database
-			#todo
-			#database.deleteTime()
-		return json.dumps(del_act)
+        delete_act = json.dumps({"title":'',"start":0,"end":0})
+        if request.method == 'POST':
+            del_act = json.loads(request.get_json().encode("utf-8"))
+            print "del act!!"
+            print del_act
+            #update user data
+
+            #save to the database
+            #todo
+            #database.deleteTime()
+        return json.dumps(del_act)
 
 @app.route("/get_color/",methods=['POST','GET'])
 def get_color():
@@ -318,11 +297,11 @@ def tutorial():
 
 @app.route("/timetable", methods=['POST','GET'])
 def timetable():
-	if request.method == 'POST':
-		data = request.get_json()
-	else:
-		data = {}
-	return render_template("timetable_test.html",data=data)
+    if request.method == 'POST':
+        data = request.get_json()
+    else:
+        data = {}
+    return render_template("timetable_test.html",data=data)
 
 @app.route("/tablesuperimposition/")
 def tablesuperimposition():

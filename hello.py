@@ -92,13 +92,32 @@ def setnickname():
 @app.route("/getinv/",methods=['GET','POST'])
 def getinv():
     if request.method == 'POST':
-        return json.dumps(database.findInv("iid,ititle,istate,icount",session['uid']))
+        return json.dumps(database.findInvByCreator("iid,ititle,istate,icount",session['uid']))
 
 @app.route("/geteve/",methods=['GET','POST'])
 def geteve():
-    # to be modified
     if request.method == 'POST':
-        return json.dumps(database.findInv("iid,ititle,istate,icount,icreator",session['uid']))
+        ids = json.loads(database.findUser("invitations", session['uid'])[0][0])
+        print ids
+        flag = False
+        results = []
+        for iid in ids:
+            t = database.findInvById("id,title,state,count,creator",iid)
+            if len(t)==0:
+                ids.remove(iid)
+                flag = True
+            else:
+                results.append(t[0])
+        if flag:
+            database.updateUser('invitations',json.dumps(ids),session['uid'])
+        return json.dumps(results)
+
+@app.route("/joinInv/")
+def joinInv():
+    invId = request.args.get('inv')
+    uid = session['uid']
+    database.invAddMember(invId,uid)
+    database.userAddInv(invId,uid)
 
 @app.route("/getcon/",methods=['GET','POST'])
 def getcon():

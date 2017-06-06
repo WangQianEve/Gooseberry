@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
-import MySQLdb, random, string
+import MySQLdb, random, string, json
 # uid = "evelynwang"
 # uname = "evelyn"
 # timezone = 8
@@ -9,7 +9,7 @@ invitationPage = "invitations"
 contactPage = "contacts"
 timePage = "times"
 
-InvIdLength = 20
+InvIdLength = 10
 calendarW = 7
 
 def ranchar(i):
@@ -23,6 +23,19 @@ def addUser(uid, psw, name, timezone):
 def findUser(goal,uid):
     sql = "select %s from %s where id='%s'" % (goal,userPage,uid)
     return exe(sql)
+
+def updateUser(goal,val,uid):
+    sql = "update %s set %s=\"%s\" where id='%s'" % (userPage,goal,val,uid)
+    return exe(sql)
+
+def userAddInv(inv,uid):
+    sql = "select invitations from %s where id='%s'" % (userPage,uid)
+    print exe(sql)
+    invs = json.loads(exe(sql)[0][0])
+    invs.append(inv)
+    sql = "update %s set invitations='%s' where id='%s'" % (userPage,json.dumps(invs),uid)
+    exe(sql)
+
 # modify name or psw or timezone
 
 # contacts
@@ -55,50 +68,50 @@ def relation(uid,fid):
 
 #time
 def addTime(uid,title,start,end):
-    sql = "insert into %s (uid, title, start, end) values ('%s','%s','%s','%s' )"% (timepage,uid,title,start,end)
+    sql = "insert into %s (uid, title, start, end) values ('%s','%s','%s','%s' )"% (timePage,uid,title,start,end)
     print sql
     exe(sql)
 
 def deleteTime(uid, title, start, end):
-    sql = "delete from %s where uid='%s' and title='%s' and start='%s' and end='%s'" % (timepage,uid,title,start,end)
+    sql = "delete from %s where uid='%s' and title='%s' and start='%s' and end='%s'" % (timePage,uid,title,start,end)
     print sql
     exe(sql)
 
 def findTime(uid, start):
     goal = "title,start,end"
     end = "timestampadd(day,%d,'%s')" % (calendarW,start)
-    sql = "select %s from %s where uid='%s' and ((start>='%s' and start<%s) or (end>'%s' and end<=%s))" % (goal,timepage,uid, start, end, start, end)
+    sql = "select %s from %s where uid='%s' and ((start>='%s' and start<%s) or (end>'%s' and end<=%s))" % (goal,timePage,uid, start, end, start, end)
     return exe(sql)
 
 #invitations
 def addInv(goal, data):
-    iid = ranchar(IIDL)
-    sql = "select iid from %s while iid=%s" % (invpage,iid)
-    print(sql)
+    iid = ranchar(InvIdLength)
+    sql = "select id from %s while id=%s" % (invitationPage,iid)
     while(len(exe(sql))!=0):
-        iid = ranchar(IIDL)
-    sql = "insert into %s (%s) values ('%s',%s)"% (invpage, goal, iid, data)
-    print sql
+        iid = ranchar(InvIdLength)
+        sql = "select id from %s while id=%s" % (invitationPage,iid)
+    sql = "insert into %s (%s) values ('%s',%s)"% (invitationPage, goal, iid, data)
     exe(sql)
-    return
 
 def deleteInv(iid):
-    sql = "delete from %s where iid='%s'"% (invpage, iid)
-    print sql
+    sql = "delete from %s where id='%s'"% (invitationPage, iid)
     exe(sql)
-    return
 
-def findInv(goal,uid):
-    sql = "select %s from %s where icreator='%s'" % (goal,invpage,uid)
-    print sql
+def findInvByCreator(goal,uid):
+    sql = "select %s from %s where creator='%s'" % (goal,invitationPage,uid)
     return exe(sql)
-#others
-def changePage():
-    sql = """
-    alter table invitations MODIFY iid VARCHAR(20);
-    alter table invitations add column creator varchar(40) not null;
-    alter table invitations CHANGE creator icreator VARCHAR(40);
-    """
+
+def findInvById(goal,iid):
+    sql = "select %s from %s where id='%s'" % (goal,invitationPage,iid)
+    return exe(sql)
+
+def invAddMember(inv, uid):
+    sql = "select members from %s where id='%s'" % (invitationPage,inv)
+    mems = json.loads(exe(sql)[0][0])
+    mems.append(uid)
+    sql = "update %s set members='%s' where id='%s'" % (invitationPage,json.dumps(mems),inv)
+    exe(sql)
+
 # update page set a=1,b=2,c=3 where d=4
 # delete from page where d=4
 
@@ -119,7 +132,7 @@ def exe(sql):
     print results
     return results
 #findInv("iid,ititle,istate,icount","evelynwang")
-#addInv("iid,ititle,istate,icount,icreator","'soa meeting','v',0,'evelynwang'")
+# addInv("id,title,state,count,creator","'soa meeting','v',0,'eli_home@outlook.com'")
 #deleteInv("py2wSVrsMI")
 # addUser(page,"wangxr","daniang")
 # makeCon()
@@ -129,3 +142,5 @@ def exe(sql):
 # addTime("wangxr","e","1705310000","1706010000")
 # deleteTime("eve","test2","1705310010","1705310111")
 # findTime("wangxr","170524")
+# userAddInv('qPOtv4laom','eli_home@outlook.com')
+# invAddMember('qPOtv4laom','eli_home@outlook.com')

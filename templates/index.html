@@ -115,17 +115,18 @@
       type: "POST",
       url: "/geteve/",
       cache: false,
+      dataType: "json",
       success: function(data) {
-        var obj = JSON.parse(data);
-        for ( str in obj ){
+        document.getElementById("eveTbody").innerHTML = "";
+        for ( n in data ){
           var status="unknown";
-          if(obj[str][2]=='v'){
+          if(data[n][2]=='v'){
             status="voting";
           }
-          else if (obj[str][2]=='f'){
+          else if (data[n][2]=='f'){
             status="finished";
           }
-          $('#invTbody').append("<tr><td><a href=\"{{url_for('invitation',inv_id='"+obj[str][0]+"',host='true')}}\">"+obj[str][1]+"</a></td><td>"+status+"</td><td>"+obj[str][3]+"</td><td>"+obj[str][4]+"</td></tr>");
+          $('#eveTbody').append("<tr><td><a href=\"{{url_for('invitation',inv_id='"+data[n][0]+"',host='true')}}\">"+data[n][1]+"</a></td><td>"+status+"</td><td>"+data[n][3]+"</td><td>"+data[n][4]+"</td></tr>");
         }
       }
     });
@@ -137,6 +138,7 @@
       url: "/getcon/",
       cache: false,
       success: function(data) {
+        document.getElementById("contactList").innerHTML = "";
         var friendList = JSON.parse(data);
         for ( str in friendList ){
           uid = friendList[str][0];

@@ -12,15 +12,16 @@ def cleanDb():
         exe(sql)
 
 def createPages():
-    sql ="CREATE TABLE IF NOT EXISTS "+userPage+"""(
-        id VARCHAR(40) NOT NULL,
-        psw VARCHAR(15) NOT NULL,
-        name VARCHAR(20) NOT NULL,
-        timezone INT DEFAULT 0,
-        invitations VARCHAR(6000) DEFUAL '[]',
-        PRIMARY KEY ( id )
-    )ENGINE=InnoDB DEFAULT CHARSET=utf8;"""
-    exe(sql)
+	# createPages()
+	sql ="CREATE TABLE IF NOT EXISTS "+userPage+"""(
+	id VARCHAR(40) NOT NULL,
+	psw VARCHAR(15) NOT NULL,
+	name VARCHAR(20) NOT NULL,
+	timezone INT DEFAULT 0,
+	invitations VARCHAR(6000) DEFAULT '[]',
+	PRIMARY KEY ( id )
+	)ENGINE=InnoDB DEFAULT CHARSET=utf8;"""
+	exe(sql)
     sql ="CREATE TABLE IF NOT EXISTS "+invitationPage+"""(
     id VARCHAR(10) NOT NULL,
     title VARCHAR(40) NOT NULL,
@@ -74,5 +75,3 @@ def exe(sql):
     db.close()
     print results
     return results
-
-changePage()

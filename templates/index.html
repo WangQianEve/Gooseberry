@@ -53,6 +53,7 @@
     return true;
   }
   function getCon(){
+	
     $.ajax({
       type: "POST",
       url: "/getcon/",
@@ -103,81 +104,70 @@
     <div id="calendar" class="tab-pane fade in active">
 
       <div class="container">
-	<table border="5" class="pos_abs">
+	  <style type="text/css">
+		td{ border:solid 1px #C0C0C0;
+			height:25px;
+			width:100px;}
+	</style>
+	<table border="1"  bordercolor="#909090" class="pos_abs">
 		<h3>This week : {{ date }}</h3>
 		<tr>
-		<td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td>
+		<td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td>
 		</tr>
 		<tr>
-		<td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td>
+		<td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td>
+		</tr><tr>
+		<td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td>
+		</tr><tr>
+		<td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td>
 		</tr>
 		<tr>
-		<td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td>
+		<td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td>
 		</tr>
 		<tr>
-		<td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td>
+		<td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td>
+		</tr><tr>
+		<td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td>
+		</tr><tr>
+		<td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td>
+		</tr><tr>
+		<td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td>
 		</tr>
 		<tr>
-		<td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td>
+		<td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td>
+		</tr><tr>
+		<td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td>
+		</tr><tr>
+		<td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td>
+		</tr><tr>
+		<td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td>
 		</tr>
 		<tr>
-		<td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td>
+		<td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td>
+		</tr><tr>
+		<td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td>
+		</tr><tr>
+		<td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td>
+		</tr><tr>
+		<td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td>
 		</tr>
 		<tr>
-		<td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td>
+		<td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td>
+		</tr><tr>
+		<td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td>
+		</tr><tr>
+		<td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td>
 		</tr>
 		<tr>
-		<td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100">
+		<td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td>
 		</tr>
 		<tr>
-		<td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td>
+		<td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td>
+		</tr><tr>
+		<td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td>
+		</tr><tr>
+		<td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td><td height="15" width="100" class="timeunit1"></td>
 		</tr>
-		<tr>
-		<td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td>
-		</tr>
-		<tr>
-		<td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td>
-		</tr>
-		<tr>
-		<td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td>
-		</tr>
-		<tr>
-		<td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td>
-		</tr>
-		<tr>
-		<td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td>
-		</tr>
-		<tr>
-		<td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td>
-		</tr>
-		<tr>
-		<td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td>
-		</tr>
-		<tr>
-		<td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td>
-		</tr>
-		<tr>
-		<td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td>
-		</tr>
-		<tr>
-		<td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td>
-		</tr>
-		<tr>
-		<td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100">
-		</tr>
-		<tr>
-		<td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td>
-		</tr>
-		<tr>
-		<td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td>
-		</tr>
-		<tr>
-		<td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td>
-		</tr>
-		<tr>
-		<td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td><td height="15" width="100"></td>
-		</tr>
-		
 	</table>
 	</div>
 	<!-- button type="button" id="save_btn" class="btn btn-primary" style="height:32px;vertical-align:center" onclick="save_schedule()">Save Schedule</button -->
@@ -188,7 +178,7 @@
 	</div>
     <div id="invitations" class="tab-pane fade">
       <h3>Invitations I started</h3>
-      <p>to be filled.</p>
+      <!--p>to be filled.</p-->
       <table class="table table-hover">
         <thead>
           <tr>
@@ -203,7 +193,7 @@
     </div>
     <div id="events" class="tab-pane fade">
       <h3>Events I Joined</h3>
-      <p>to be filled.</p>
+      <!--p>to be filled.</p-->
       <table class="table table-hover">
         <thead>
           <tr>
@@ -219,11 +209,100 @@
     </div>
     <div id="goose" class="tab-pane fade">
       <h3>Contacts</h3>
-      <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
+      
+	  <div class="container">
+	<table border="1" class="pos_abs">
+		<tr>
+		<td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td>
+		</tr>
+		<tr>
+		<td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td>
+		</tr>
+		<tr>
+		<td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td>
+		</tr>
+		<tr>
+		<td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td>
+		</tr>
+		<tr>
+		<td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td>
+		</tr>
+		<tr>
+		<td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td>
+		</tr>
+		<tr>
+		<td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td>
+		</tr>
+		<tr>
+		<td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td>
+		</tr>
+		<tr>
+		<td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td>
+		</tr>
+		<tr>
+		<td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td>
+		</tr>
+		<tr>
+		<td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td>
+		</tr>
+		<tr>
+		<td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td>
+		</tr>
+		<tr>
+		<td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td>
+		</tr>
+		<tr>
+		<td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td>
+		</tr>
+		<tr>
+		<td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td>
+		</tr>
+		<tr>
+		<td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td>
+		</tr>
+		<tr>
+		<td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td>
+		</tr>
+		<tr>
+		<td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td>
+		</tr>
+		<tr>
+		<td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td>
+		</tr>
+		<tr>
+		<td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td>
+		</tr>
+		<tr>
+		<td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td>
+		</tr>
+		<tr>
+		<td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td>
+		</tr>
+		<tr>
+		<td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td>
+		</tr>
+		<tr>
+		<td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td>
+		</tr>
+	</table>
+	<div class="col-md-2">
+	  <div style="overflow-y:auto;overflow-x:hidden;height:160px">
+	  <p>Friend list</p>
+		<ul id="intervieweelist" style="list-style-type:circle;height:auto">
+			{% for i in friendlist %}
+              <label><input type="checkbox" name="usercheckbox" value={{i.id}}> {{i.id}} </label>
+			  <br>
+			{% endfor %}
+		</ul>
+	  </div>
+	  <button type="button" id="superimpose_btn" class="btn btn-primary" style="height:32px;vertical-align:center" onclick="superimpose_schedule()">Superimpose</button>
+	  </div>
 
       <ul id="contactList" style="list-style-type:circle;height:auto">
       </ul>
 
+	</div>
+	
     </div>
   </div>
   
@@ -260,8 +339,8 @@
 	//Will be changed
 	var linenum = 24;
 	
-	var tds = document.getElementsByTagName('td');
-	
+	var tds = $(".timeunit1");
+	var impose_tds = $(".timeunit2");
 	var multi_flag = false;
 	var start_index = -1;
 	
@@ -382,23 +461,7 @@
 	
 	render_table_data();
 	
-	var bkdata0='{{bgcolor|tojson}}';
-	//console.log(bkdata0);
-	bkdata0=bkdata0.substr(1,bkdata0.length-2);
-	var bkdata=JSON.parse(bkdata0);
-	console.log(bkdata);
 	
-	function set_color(){
-		for(var i = 0;i<bkdata.color1.length; i++){
-			tds[bkdata.color1[i]].style.backgroundColor = colorlist[1];
-		}
-		for(var i = 0;i<bkdata.color2.length; i++){
-			tds[bkdata.color2[i]].style.backgroundColor = colorlist[2];
-		}
-		for(var i = 0;i<bkdata.color3.length; i++){
-			tds[bkdata.color3[i]].style.backgroundColor = colorlist[3];
-		}
-	}
 	
 	function set_color_by_selectedlist(){
 		for(var i = 0; i < selectedlist.length; i++){
@@ -406,6 +469,12 @@
 		}
 	}
 	
+	function clear_timetable(){
+		for(var i = 0; i < tds.length; i++){
+			tds[i].style.backgroundColor = colorlist[0];
+			tds[i].innerText = '';
+		}
+	}
 	function save_schedule(){
 		
 		var save_data={"id":[]};
@@ -536,6 +605,46 @@
 		}
 		
 		
+	}
+	
+	
+	var bkdata0='{{bgcolor|tojson}}';
+	//console.log(bkdata0);
+	bkdata0=bkdata0.substr(1,bkdata0.length-2);
+	var bkdata=JSON.parse(bkdata0);
+	console.log(bkdata);
+	
+	function set_color(){
+		for(var i = 0;i<bkdata.color1.length; i++){
+			impose_tds[bkdata.color1[i]].style.backgroundColor = colorlist[1];
+		}
+		for(var i = 0;i<bkdata.color2.length; i++){
+			impose_tds[bkdata.color2[i]].style.backgroundColor = colorlist[2];
+		}
+		for(var i = 0;i<bkdata.color3.length; i++){
+			impose_tds[bkdata.color3[i]].style.backgroundColor = colorlist[3];
+		}
+	}
+	
+	function superimpose_schedule(){
+	    var usrdata ={"id":[]};
+		$("input[name='usercheckbox']:checked").each(function(){
+		  usrdata.id.push($(this).val());
+		});
+		user_data_json = JSON.stringify(usrdata);
+		$.ajax({
+			type: 'POST',
+			url: "/get_color/",
+			data: JSON.stringify(user_data_json), 
+			contentType: 'application/json; charset=UTF-8',
+			dataType: 'json', 
+			success: function(data) { 
+				console.log(data);
+				set_color(data);
+			},
+			error: function(e) {
+			}
+		});
 	}
 	</script>
 </html>

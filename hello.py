@@ -87,6 +87,10 @@ def logout():
 def get_table_info_by_usr(usr):
 	event_list = []
 	table_data = {"time" : [{"title":"act 1","start":"1","end":"5"},{"title":"act 2","start":"20","end":"36"}]}
+	#get data from database by user id
+	#all activities
+	#date
+	#todo
 	return table_data
 
 def find_user_by_id(id):
@@ -99,6 +103,8 @@ def cal_color(usrlist):
     color_data ={"color1":[],"color2":[],"color3":[]}
     tmpdict={}
 	#Count the times of each time unit
+	#todo
+	#get users'data from database
     for i in usrlist:
         usr = find_user_by_id(int(i))
         if(usr != None):

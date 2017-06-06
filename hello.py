@@ -42,14 +42,9 @@ update_user_calendar(user3,list3)
 @app.route("/", methods=['GET', 'POST'])
 def index():
 
-    usrlist = []
-
-    print usrlist
-    bkdata= json.dumps(cal_color(usrlist));
-    
     #Update the date
     cur_date=time.strftime('%y%m%d0000',time.localtime(time.time()))
-
+    friendlist = []
     if request.method == 'POST':
         uid = request.form['id']
         psw = request.form['psw']
@@ -57,19 +52,24 @@ def index():
         if len(result) > 0 and result[0][0]==psw :
             session['uid']= uid
             session['username']=result[0][1]
-            cur_user = uid
-            print "ID"
-            print session['uid']
             table_data = json.dumps(get_table_info_by_usr(session['uid']))
-            return render_template("index.html", uname=session['username'],bgcolor = bkdata,table_data=table_data)
+            friendlist = database.findCon(session['uid'])
+            usrlist = [session['uid']]
+            bkdata= json.dumps(cal_color(usrlist))
+            print "bkdata"
+            print bkdata
+            return render_template("index.html", uname=session['username'],bgcolor = bkdata,table_data=table_data,friendlist = friendlist)
         else:
             return render_template("hello.html", msg="User ID or Password wrong!")
     if 'uid' in session:
-        cur_user = session['uid']
-        print "ID"
-        print session['uid']
+        
         table_data = json.dumps(get_table_info_by_usr(session['uid']))
-        return render_template("index.html", uname=session['username'],bgcolor = bkdata,table_data=table_data)
+        friendlist = database.findCon(session['uid'])
+        usrlist = [[session['uid']]]
+        bkdata= json.dumps(cal_color(usrlist));
+        print "bkdata"
+        print bkdata
+        return render_template("index.html", uname=session['username'],bgcolor = bkdata,table_data=table_data,friendlist = friendlist)
     return render_template("hello.html")
 
 @app.route("/signup",methods =['GET','POST'])
@@ -173,7 +173,7 @@ def joinInv():
 def getcon():
     if request.method == 'POST':
 #        return json.dumps(database.findCon(session['uid']))
-        return json.dumps({data:"getcon"})
+        return json.dumps({"data":"getcon"})
 
 def count_time_unit(t):
     time_num = 0
@@ -202,8 +202,6 @@ def get_table_info_by_usr(usr):
         print user_data
         for i in user_data:
             start_time = i[1].strftime('%y%m%d%H00')
-            print "start time"
-            print start_time
             start_num = count_time_unit(start_time)
             end_time = i[2].strftime('%y%m%d%H00')
             end_num = count_time_unit(end_time)
@@ -224,17 +222,20 @@ def cal_color(usrlist):
     color_data ={"color1":[],"color2":[],"color3":[]}
     tmpdict={}
     #Count the times of each time unit
-    #todo
     #get users'data from database
-    for i in usrlist:
-        usr = find_user_by_id(int(i))
-        if(usr != None):
-            #usr.user_week_time_table.print_timetable()
-            for k in usr.user_week_time_table.week_table:
-                if not str(k.get_number()) in tmpdict:
-                    tmpdict[str(k.get_number())] = 1
+    for u in usrlist:
+        user_data = database.findTime(u,cur_date)
+        for i in user_data:
+            start_time = i[1].strftime('%y%m%d%H00')
+            start_num = count_time_unit(start_time)
+            end_time = i[2].strftime('%y%m%d%H00')
+            end_num = count_time_unit(end_time)
+
+            for k in range(start_num, end_num + 1):
+                if not str(k) in tmpdict:
+                    tmpdict[str(k)] = 1
                 else:
-                    tmpdict[str(k.get_number())] += 1
+                    tmpdict[str(k)] += 1
 
     for key in tmpdict:
         #print 'key: '+key+'  '+str(tmpdict[key])
@@ -297,13 +298,13 @@ def delete_activity():
 
 @app.route("/get_color/",methods=['POST','GET'])
 def get_color():
-        usrlist = [cur_user]
+        usrlist = [session['uid']]
         if request.method == 'POST':
-            print type(request.get_json())
             #usrdata = request.get_json()
             usrdata = json.loads(request.get_json().encode("utf-8"))
             usrlist = usrdata['id']
-            usrlist.append(cur_user)
+            
+            usrlist.append(session['uid'])
 
         print usrlist
         bkdata= json.dumps(cal_color(usrlist));

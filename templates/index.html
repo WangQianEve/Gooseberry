@@ -9,72 +9,85 @@
   <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <!-- <script type="text/javascript" src="/static/script/tabs.js"></script> -->
   <script>
-  $(document).ready(function(){
-    alert("in");
-    $('#nickname1').keydown(function(e){
-      var key= e.which;
-      if (key==13){
-        alert("hh");
-        // alert(this.value);
-        // $.ajax({
-        //   type: "GET",
-        //   url: "/setnickname/",
-        //   data: {
-        //     'id':fid,//
-        //     'name':name,//
-        //     'nickname':this.value,
-        //   }
-        // });
+  function delcon(fid,fname){
+    $.ajax({
+      type: "GET",
+      url: "/delcon/",
+      data: {id:fid},
+      cache: false,
+      success: function() {
+        document.getElementById(fid).innerHTML = "";
+        $("li[id='"+fid+"']").append("<font size='4'>"+fname+"</font><button style='float:right' type='button' onclick=\"addcon('"+fid+"','"+fname+"')\" class='btn btn-info'>+ Add  </button></br><font size='2' color='grey'> "+fid+"</font>");
       }
     });
-    // $('#nickname').blur(function(){
-    //   alert("ss");
-    // });
-    // $('#searchFriendBtn').click(function(){
-    //   alert("he");
-      // var searchText = $('#searchFriendText').value;
-      // alert(searchText);
-      // $.ajax({
-      //   type: "POST",
-      //   url: "/searchpeople/",
-      //   cache: false,
-      //   data: searchText,
-      //   success: function(data) {
-      //     alert(data);
-      //     var list= document.getElementById("searchResult");
-      //     list.innerHTML = "";
-      //     var obj = JSON.parse(data);
-      //     for(n in obj['strangers']){
-      //       alert(n);
-      //       // list.append("""
-      //       // <li class='list-group-item' id='"+obj[n][1]+"'> \
-      //       //   <font size='4'>"+obj[n][0]"</font> \
-      //       //   <font size='1' color='grey'>备注：<input type='text' id='nickname' value='"+obj[n][2]"'></input></font> \
-      //       //   <button style='float:right' type='button' onclick='addcon("+obj[n][1]+","+obj[n][0]+")' class='btn btn-info'>+ Add  </button> \
-      //       //   </br> \
-      //       //   <font size='2' color='grey'> "+obj[n][1]"</font> \
-      //       // </li> \
-      //       // """);
-      //     }
-      //   }
-      // });
-    // });
-  });
-  function addcon(fid,name){
+  }
+  function addcon(fid,fname){
     $.ajax({
       type: "GET",
       url: "/addcon/",
       data: {
-        'id':fid,
-        'name':name,
-      }
+        id:fid,
+        name:fname,
+      },
       cache: false,
       success: function() {
-        document.getElementById("fid").innerHTML = "";
-        $('#'+fid).append("tobe continued");
+        document.getElementById(fid).innerHTML = "";
+        $("li[id='"+fid+"']").append("<font size='4'>"+fname+"</font><font size='1' color='grey'>  备注：<input style='border:1px;border-bottom-style:none;border-top-style:none;border-left-style:none;border-right-style:none;' type='text' name='nickname' id='nick"+fid+"' value=''></input></font><button style='float:right' type='button' onclick=\"delcon('"+fid+"','"+fname+"')\" class='btn btn-error'>Delete</button></br><font size='2' color='grey'> "+fid+"</font>");
       }
     });
   }
+  $(document).ready(function(){
+    $('#searchFriendBtn').click(function(){
+      var searchText = $('#searchFriendText').val();
+      $.ajax({
+        type: "POST",
+        url: "/searchpeople/",
+        cache: false,
+        data: {ids:searchText},
+        dataType:'json',
+        success: function(data) {
+          var list= document.getElementById("searchResult");
+          var $list = $('#searchResult');
+          list.innerHTML = "";
+          var wrList = data['wrong'];
+          var frList = data['friends'];
+          var stList = data['strangers'];
+          for(n in stList){
+            s = "<li class='list-group-item' id='"+stList[n][0]+"'><font size='4'>"+stList[n][1]+"</font><button style='float:right' type='button' onclick=\"addcon('"+stList[n][0]+"','"+stList[n][1]+"')\" class='btn btn-info'>+ Add  </button></br><font size='2' color='grey'> "+stList[n][0]+"</font></li>";
+            $list.append(s);
+          }
+          for(n in wrList){
+            $list.append("<li class='list-group-item list-group-item-danger'><font size='4'>"+wrList[n]+"</font></br><font size='2' color='grey'> no such user </font></li>");
+          }
+          for(n in frList){
+            s="<li class='list-group-item' id='"+frList[n][0]+"'><font size='4'>"+frList[n][1]+"</font><font size='1' color='grey'>  备注：<input style='border:1px;border-bottom-style:none;border-top-style:none;border-left-style:none;border-right-style:none;' type='text' name='nickname' id='nick"+frList[n][0]+"' value='"+frList[n][2]+"'></input></font><button style='float:right' type='button' onclick=\"delcon('"+frList[n][0]+"','"+frList[n][1]+"')\" class='btn btn-error'>Delete</button></br><font size='2' color='grey'> "+frList[n][0]+"</font></li>";
+            $list.append(s);
+          }
+          $("input[name='nickname']").keydown(function(e){
+            var key= e.which;
+            if (key==13){
+              this.blur();
+            }
+          });
+          $("input[name='nickname']").blur(function(){
+            $.ajax({
+              type: "GET",
+              url: "/setnickname/",
+              data: {
+                id:this.id,
+                nickname:this.value,
+              },
+              success: function(data) {
+                if(data=="error"){
+                  alert("Error. Try english nickname.");
+                }
+              }
+            });
+          });
+        }
+      });
+    });
+  });
   function getInv(){
     $.ajax({
       type: "POST",
@@ -208,6 +221,7 @@
         <button type="button" class="btn btn-info" data-toggle="modal" data-target="#addFriendModal">+ Add Friend</button>
         <ul id="contactList" style="list-style-type:circle;height:auto">
         </ul>
+        <button type="button" class="btn btn-danger" >x Delete</button>
       </div>
     </div>
   </div>
@@ -234,27 +248,6 @@
         </div>
         </br>
         <ul class="list-group" id="searchResult">
-          <li class='list-group-item'>
-            <font size='4'>WangQian</font>
-            <font size='1' color='grey'>备注：<input type='text' id='nickname1' value='小倩倩'></input></font>
-            <button style='float:right' type='button' class='btn btn-info'>+ Add  </button>
-            </br>
-            <font size='2' color='grey'>ID : eli_home@outlook.com</font>
-          </li>
-          <li class="list-group-item">
-            <font size="4">WangQian</font>
-            <font size="1" color="grey">备注：<input type="text" id="nickname2" value="小倩倩"></input></font>
-            <button style="float:right" type="button" class="btn btn-error">Delete</button>
-            </br>
-            <font size="2" color="grey">ID : eli_home@outlook.com</font>
-          </li>
-          <li class="list-group-item">
-            <font size="4">WangQian</font>
-            <font size="1" color="grey">备注：<input type="text" id="nickname3" value="小倩倩"></input></font>
-            <button style="float:right" type="button" class="btn btn-info">+ Add</button>
-            </br>
-            <font size="2" color="grey">ID : eli_home@outlook.com</font>
-          </li>
         </ul>
       </div>
     </div>

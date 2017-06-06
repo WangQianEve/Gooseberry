@@ -27,23 +27,30 @@ def findUser(goal,uid):
 
 # contacts
 def addCon(uid, fid, fname, fnickname):
-    sql = "insert into %s (uid, fid, fname, fnickname) values ('%s','%s','%s','%s' )"% (conpage, uid, fid, fname, fnickname)
-    print sql
+    sql = "insert into %s (uid, id, name, nickname) values ('%s','%s','%s','%s' )"% (contactPage, uid, fid, fname, fnickname)
     exe(sql)
+    # sql = "select fid from %s where uid ='%s' and id='%s'" % (contactPage, uid, fid)
+    # t = exe(sql)
+    # if len(t)==0:
+    #     sql = "insert into %s (uid, id, name, nickname) values ('%s','%s','%s','%s' )"% (contactPage, uid, fid, fname, fnickname)
+    #     exe(sql)
 
-def deleteCon(uid,fid):
-    sql = "delete from %s where uid='%s' and fid='%s'" % (conpage, uid, fid)
-    print sql
+def updateCon(uid, fid, goal, val):
+    sql = "update %s set %s='%s' where uid='%s' and id='%s'" %  (contactPage, goal, val, uid, fid[4:])
+    return exe(sql)
+
+def delCon(uid,fid):
+    sql = "delete from %s where uid='%s' and id='%s'" % (contactPage, uid, fid)
     exe(sql)
 
 def findCon(uid):
     goal = "id,name,nickname"
-    sql = "select %s from %s where uid='%s' " % (goal,conpage,uid)
+    sql = "select %s from %s where uid='%s' " % (goal,contactPage,uid)
     return exe(sql)
 
-def findCon(uid,id):
-    goal = "name,nickname"
-    sql = "select %s from %s where uid='%s' and id='%s' " % (goal,conpage,uid,id)
+def relation(uid,fid):
+    goal = "id,name,nickname"
+    sql = "select %s from %s where uid='%s' and id='%s' " % (goal,contactPage,uid,fid)
     return exe(sql)
 
 #time
@@ -61,7 +68,6 @@ def findTime(uid, start):
     goal = "title,start,end"
     end = "timestampadd(day,%d,'%s')" % (calendarW,start)
     sql = "select %s from %s where uid='%s' and ((start>='%s' and start<%s) or (end>'%s' and end<=%s))" % (goal,timepage,uid, start, end, start, end)
-    print sql
     return exe(sql)
 
 #invitations
@@ -97,6 +103,7 @@ def changePage():
 # delete from page where d=4
 
 def exe(sql):
+    print "[sql] ",
     print sql
     db = MySQLdb.connect(host='127.0.0.1',port = 3306,user='root', passwd='',db ='gooseberry')
     cursor = db.cursor()
@@ -108,6 +115,7 @@ def exe(sql):
     except:
        db.rollback()
     db.close()
+    print "[sql] ",
     print results
     return results
 #findInv("iid,ititle,istate,icount","evelynwang")

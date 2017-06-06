@@ -39,26 +39,28 @@ def logout():
 @app.route("/searchpeople/",methods=['GET','POST'])
 def searchpeople():
     if request.method == 'POST':
-        searchText = request.data.split(';');
-        print(searchText)
+        searchText = request.values.get('ids').split(';');
         uid=session['uid']
         frList=[]
         nofrList=[]
         noPerList=[]
-        # for fid in searchText:
-        #     t = database.findCon(uid,fid.strip())
-        #     if len(t)>0:
-        #         frList.append(t[0])
-        #     else:
-        #         t = database.findUser("id,name",fid)
-        #         if len(t)>0:
-        #             nofrList.append(t[0])
-        #         else:
-        #             noPerList.append(fid)
+        for fid in searchText:
+            t = database.relation(uid,fid.strip())
+            print(t)
+            if len(t)>0:
+                frList.append(t[0])
+            else:
+                print(t)
+                t = database.findUser("id,name",fid)
+                if len(t)>0:
+                    nofrList.append(t[0])
+                else:
+                    noPerList.append(fid)
         result = {}
         result['friends']=frList
         result['strangers']=nofrList
         result['wrong']=noPerList
+        print result
         return json.dumps(result)
 
 @app.route("/addcon/")
@@ -69,14 +71,23 @@ def addcon():
     database.addCon(uid,fid,fname,"")
     return "success"
 
+@app.route("/delcon/")
+def delcon():
+    uid=session['uid']
+    fid=request.args.get('id')
+    database.delCon(uid,fid)
+    return "success"
+
 @app.route("/setnickname/")
 def setnickname():
     uid=session['uid']
     fid=request.args.get('id')
-    fname=request.args.get('name')
     fnickname = request.args.get('nickname')
-    database.addCon(uid,fid,fname,fnickname)
-    return "success"
+    results = database.updateCon(uid,fid,"nickname",fnickname)
+    if isinstance(results,(list)):
+        return "error"
+    else:
+        return "success"
 
 @app.route("/getinv/",methods=['GET','POST'])
 def getinv():

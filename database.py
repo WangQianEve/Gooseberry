@@ -68,19 +68,19 @@ def relation(uid,fid):
 
 #time
 def addTime(uid,title,start,end):
-    sql = "insert into %s (uid, title, start, end) values ('%s','%s','%s','%s' )"% (timePage,uid,title,start,end)
+    sql = "insert into %s (id, title, start, end) values ('%s','%s','%s','%s' )"% (timePage,uid,title,start,end)
     print sql
     exe(sql)
 
 def deleteTime(uid, title, start, end):
-    sql = "delete from %s where uid='%s' and title='%s' and start='%s' and end='%s'" % (timePage,uid,title,start,end)
+    sql = "delete from %s where id='%s' and title='%s' and start='%s' and end='%s'" % (timePage,uid,title,start,end)
     print sql
     exe(sql)
 
 def findTime(uid, start):
     goal = "title,start,end"
     end = "timestampadd(day,%d,'%s')" % (calendarW,start)
-    sql = "select %s from %s where uid='%s' and ((start>='%s' and start<%s) or (end>'%s' and end<=%s))" % (goal,timePage,uid, start, end, start, end)
+    sql = "select %s from %s where id='%s' and ((start>='%s' and start<%s) or (end>'%s' and end<=%s))" % (goal,timePage,uid, start, end, start, end)
     return exe(sql)
 
 #invitations

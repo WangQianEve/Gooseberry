@@ -1,12 +1,14 @@
+import time,datetime
 
-from data import timeunit,timetable,activity,user
+cur_date=time.strftime('%y%m%d0000',time.localtime(time.time()))
+print cur_date
 
-ttable = timetable()
-ttable.add_time_unit(20170513,5,1)
-user1 = user('001')
-user1.user_week_time_table = ttable
+t="1706081200"
+lineNum = 24
+time_num = 36
 
-act1 = activity()
-act1.add_participant(user1)
 
-print act1
+d1 = datetime.datetime(int('20'+cur_date[0:2]), int(cur_date[2:4]), int(cur_date[4:6]))
+d2 = (d1 + datetime.timedelta(days=time_num/lineNum)).strftime('%y%m%d')  
+t = d2 + '%2d' %(time_num % lineNum) + '00' 
+print t

@@ -5,6 +5,8 @@ import database
 import json
 from flask import jsonify
 from data import timeunit,timetable,activity,user
+import time,datetime
+
 app = Flask(__name__)
 # set the secret key.  keep this really secret:
 app.secret_key = '|G\x8f\x7f\x02\xb87\x9cYai\xc4D\x11\xd4\xf4j>\x1a\x15\xdc\x95l\x1f'
@@ -16,12 +18,13 @@ def update_user_calendar(usr,time_unit_list):
         usr.user_week_time_table.add_time_unit(cur_date,i,1,'default')
 
 #Make some data to use
-time_amount = 7*24
-cur_date = 20170101
+lineNum = 24
+time_amount = 7*lineNum
+cur_date = time.strftime('%y%m%d0000',time.localtime(time.time()))
 user1 = user(001)
 user2 = user(002)
 user3 = user(003)
-cur_user = user1
+cur_user = ''
 total_user = [user1,user2,user3]
 default_bkdata = {"color1":[],"color2":[],"color3":[5,17,25,64,100]}
 
@@ -43,8 +46,9 @@ def index():
 
     print usrlist
     bkdata= json.dumps(cal_color(usrlist));
-
-
+    
+    #Update the date
+    cur_date=time.strftime('%y%m%d0000',time.localtime(time.time()))
 
     if request.method == 'POST':
         uid = request.form['id']
@@ -53,15 +57,19 @@ def index():
         if len(result) > 0 and result[0][0]==psw :
             session['uid']= uid
             session['username']=result[0][1]
-            cur_user = user(uid)
-            table_data = json.dumps(get_table_info_by_usr(cur_user))
-            return render_template("index.html", uname=session['username'],bgcolor = bkdata,table_data=table_data,friendlist=cur_user.friendlist)
+            cur_user = uid
+            print "ID"
+            print session['uid']
+            table_data = json.dumps(get_table_info_by_usr(session['uid']))
+            return render_template("index.html", uname=session['username'],bgcolor = bkdata,table_data=table_data)
         else:
             return render_template("hello.html", msg="User ID or Password wrong!")
     if 'uid' in session:
-        cur_user = user(session['uid'])
-        table_data = json.dumps(get_table_info_by_usr(cur_user))
-        return render_template("index.html", uname=session['username'],bgcolor = bkdata,table_data=table_data,friendlist=cur_user.friendlist)
+        cur_user = session['uid']
+        print "ID"
+        print session['uid']
+        table_data = json.dumps(get_table_info_by_usr(session['uid']))
+        return render_template("index.html", uname=session['username'],bgcolor = bkdata,table_data=table_data)
     return render_template("hello.html")
 
 @app.route("/signup",methods =['GET','POST'])
@@ -167,14 +175,43 @@ def getcon():
 #        return json.dumps(database.findCon(session['uid']))
         return json.dumps({data:"getcon"})
 
+def count_time_unit(t):
+    time_num = 0
+    print " count time unit "
+    d1 = datetime.datetime(int('20'+t[0:2]), int(t[2:4]), int(t[4:6]))
+    d2 = datetime.datetime(int('20'+cur_date[0:2]), int(cur_date[2:4]), int(cur_date[4:6]))
+    time_num = (d1-d2).days * lineNum + int(t[6:8])*lineNum/24 
+    print time_num
+    return time_num
+    
+def calc_time(time_num):
+    t = 0
+    print " month "
+    print int(cur_date[2:4])
+    print cur_date
+    d1 = datetime.datetime(int('20'+cur_date[0:2]), int(cur_date[2:4]), int(cur_date[4:6]))
+    d2 = (d1 + datetime.timedelta(days=time_num/lineNum)).strftime('%y%m%d')  
+    t = d2 + '%02d' %(time_num % lineNum) + '00' 
+    return t
 
 def get_table_info_by_usr(usr):
-    event_list = []
-    table_data = {"time" : [{"title":"act 1","start":"1","end":"5"},{"title":"act 2","start":"20","end":"36"}]}
-    #get data from database by user id
-    #all activities
-    #date
-    #todo
+    table_data = {"time" : []}
+    if 'uid' in session:
+        user_data = database.findTime(usr,cur_date)
+        print "user data"
+        print user_data
+        for i in user_data:
+            start_time = i[1].strftime('%y%m%d%H00')
+            print "start time"
+            print start_time
+            start_num = count_time_unit(start_time)
+            end_time = i[2].strftime('%y%m%d%H00')
+            end_num = count_time_unit(end_time)
+            act = {"title":i[0],"start":start_num,"end":end_num}
+            table_data["time"].append(act)
+    print "table data "    
+    print table_data
+
     return table_data
 
 def find_user_by_id(id):
@@ -241,8 +278,8 @@ def save_activity():
             #update user data
 
             #save to the database
-            #todo
-            #database.addTime()
+            
+            database.addTime(session['uid'], new_act["title"], calc_time(new_act["start"]), calc_time(new_act["end"]))
         return json.dumps(new_act)
 
 @app.route("/delete_activity/",methods=['POST','GET'])
@@ -255,19 +292,18 @@ def delete_activity():
             #update user data
 
             #save to the database
-            #todo
-            #database.deleteTime()
+            database.deleteTime(session['uid'], del_act["title"], calc_time(del_act["start"]), calc_time(del_act["end"]))
         return json.dumps(del_act)
 
 @app.route("/get_color/",methods=['POST','GET'])
 def get_color():
-        usrlist = [cur_user.id]
+        usrlist = [cur_user]
         if request.method == 'POST':
             print type(request.get_json())
             #usrdata = request.get_json()
             usrdata = json.loads(request.get_json().encode("utf-8"))
             usrlist = usrdata['id']
-            usrlist.append(cur_user.id)
+            usrlist.append(cur_user)
 
         print usrlist
         bkdata= json.dumps(cal_color(usrlist));

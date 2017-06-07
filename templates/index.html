@@ -9,18 +9,55 @@
   <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <!-- <script type="text/javascript" src="/static/script/tabs.js"></script> -->
   <script>
-  function delcon(fid,fname){
+  function delcon(fid, fname){
+    
+    
     $.ajax({
       type: "GET",
       url: "/delcon/",
       data: {id:fid},
       cache: false,
       success: function() {
+        console.log("In")
         document.getElementById(fid).innerHTML = "";
         $("li[id='"+fid+"']").append("<font size='4'>"+fname+"</font><button style='float:right' type='button' onclick=\"addcon('"+fid+"','"+fname+"')\" class='btn btn-info'>+ Add  </button></br><font size='2' color='grey'> "+fid+"</font>");
       }
     });
   }
+  
+  function del_cons(){
+    var usrdata ={"id":[]};
+    $("input[name='usercheckbox']:checked").each(function(){
+      usrdata.id.push($(this).val());
+    });
+    user_data_json = JSON.stringify(usrdata);
+    console.log(user_data_json);
+    
+    $.ajax({
+      type: "POST",
+      url: "/delcon/",
+      data: JSON.stringify(user_data_json),
+      contentType: 'application/json; charset=UTF-8',
+	  dataType: 'json',
+      cache: false,
+      success: function(data) {
+        $('#contactList').empty()
+        console.log(data)
+        var friendList = data;
+        console.log(friendList)
+        for ( str in friendList ){
+          console.log(str)
+          uid = friendList[str][0];
+          uname = friendList[str][2];
+          if(uname==''){
+            uname = friendList[str][1];
+          }
+          $('#contactList').append("<label><input type=\"checkbox\" name=\"usercheckbox\" value="+uid+"> "+uname+" </label><br>");
+        }
+      }
+    });
+  }
+  
   function addcon(fid,fname){
     $.ajax({
       type: "GET",
@@ -33,6 +70,7 @@
       success: function() {
         document.getElementById(fid).innerHTML = "";
         $("li[id='"+fid+"']").append("<font size='4'>"+fname+"</font><font size='1' color='grey'>  备注：<input style='border:1px;border-bottom-style:none;border-top-style:none;border-left-style:none;border-right-style:none;' type='text' name='nickname' id='nick"+fid+"' value=''></input></font><button style='float:right' type='button' onclick=\"delcon('"+fid+"','"+fname+"')\" class='btn btn-error'>Delete</button></br><font size='2' color='grey'> "+fid+"</font>");
+        $('#contactList').append("<label><input type=\"checkbox\" name=\"usercheckbox\" value="+fid+"> "+fname+" </label><br>");
       }
     });
   }
@@ -294,14 +332,11 @@
         <button type="button" class="btn btn-info" data-toggle="modal" data-target="#addFriendModal">+ Add Friend</button>
         <!--ul id="contactList" style="list-style-type:circle;height:auto">
         </ul-->
-        <button type="button" class="btn btn-danger" >x Delete</button>
+        <button type="button" class="btn btn-danger" onclick="del_cons()">x Delete</button>
         <br><br><br>
         <div style="overflow-y:auto;overflow-x:hidden;height:160px">
-		<ul id="intervieweelist" style="list-style-type:circle;height:auto">
-			{% for i in friendlist %}
-              <label><input type="checkbox" name="usercheckbox" value={{i[0]}}> {{i[0]}} </label>
-			  <br>
-			{% endfor %}
+		<ul id="contactList" style="list-style-type:circle;height:auto">
+			
 		</ul>
 	  </div>
 	  <button type="button" id="superimpose_btn" class="btn btn-primary" style="height:32px;vertical-align:center" onclick="superimpose_schedule()">Superimpose</button>

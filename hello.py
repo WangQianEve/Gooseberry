@@ -120,12 +120,30 @@ def addcon():
     database.addCon(uid,fid,fname,"")
     return "success"
 
-@app.route("/delcon/")
+@app.route("/delcon/",methods=['GET','POST'])
 def delcon():
-    uid=session['uid']
-    fid=request.args.get('id')
-    database.delCon(uid,fid)
-    return "success"
+    if request.method == 'POST':
+        uid=session['uid']
+        print request.get_json()
+        usrdata = json.loads(request.get_json().encode("utf-8"))
+        usrlist = usrdata['id']
+        for fid in usrlist:
+            
+            database.delCon(uid,fid)
+        data = database.findCon(session['uid'])
+        #data = {"id":[]}
+        #for i in list:
+        #    data["id"].append(i[0])
+        #data = json.dumps(data)
+        print "friendlist"
+        print data
+        return json.dumps(data)
+    else:
+        uid=session['uid']
+        fid=request.args.get('id')
+        database.delCon(uid,fid)
+        print "success"
+        return "success"
 
 @app.route("/setnickname/")
 def setnickname():
@@ -172,8 +190,8 @@ def joinInv():
 @app.route("/getcon/",methods=['GET','POST'])
 def getcon():
     if request.method == 'POST':
-#        return json.dumps(database.findCon(session['uid']))
-        return json.dumps({"data":"getcon"})
+        return json.dumps(database.findCon(session['uid']))
+        #return json.dumps({"data":"getcon"})
 
 def count_time_unit(t):
     time_num = 0

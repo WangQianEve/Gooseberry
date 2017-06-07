@@ -327,8 +327,7 @@ def get_color():
             #usrdata = request.get_json()
             usrdata = json.loads(request.get_json().encode("utf-8"))
             usrlist = usrdata['id']
-            
-            usrlist.append(session['uid'])
+            #usrlist.append(session['uid'])
 
         print usrlist
         bkdata= json.dumps(cal_color(usrlist));

@@ -7,6 +7,139 @@
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.bootcss.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
   <script src="http://maxcdn.bootstrapcdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <script>
+  var options;
+  var impose_tds = $(".timeunit1");
+  var baseColorR = 255-80;
+  var baseColorG = 255-30;
+  var baseColorB = 255-130;
+  $(document).ready(function(){
+    var dataString = {{data|tojson}};
+    var data = JSON.parse(dataString);
+    $('h2').text(data[0][0]);
+    if(data[0][1]=='v'){
+      $('h4').text('Voting...');
+    }
+    else{
+      $('h4').text('Settled down.');
+    }
+    $('#creatorTag').html('Creator : '+data[0][2]);
+    $('#discription').html('<b>Discription</b> '+data[0][3]);
+    var uid = '{{uid}}';
+    if(data[0][2]!=uid) {
+      $('#setBtn').hide();
+      $('#delBtn').hide();
+    }
+    var count = 0;
+    var members = JSON.parse(data[0][5]);
+    var membersMD = $('#membersModalBody');
+    var mopts=[];
+    membersMD.text('');
+    for(i in members){
+      count+=1;
+      member = members[i];
+      membersMD.append("<p>"+member+"</p></br>");
+      if(member==uid){
+        $('#joinBtn').hide();
+        $('#exitBtn').show();
+        $('#modiBtn').show();
+        var tmopts=JSON.parse('{{moptions|tojson}}');
+        tmopts= JSON.parse(tmopts);
+        for (mopt in tmopts){
+          mopts.push(tmopts[mopt][0]);
+        }
+      }
+    }
+    $('#voteCounts').text('Votes : '+count);
+    impose_tds = $(".timeunit1");
+    var td;
+    for(var i = 0; i < impose_tds.length; i++){
+      td = impose_tds[i];
+      td.index = i;
+      td.align='center';
+      td.style.color='black';
+    }
+    for(i in mopts){
+      impose_tds[mopts[i]].style.color='grey';
+    }
+    options=JSON.parse(data[0][4]);
+    for(var i = 0;i<options.length; i++){
+      td=impose_tds[options[i]];
+      td.innerHTML='<b>O</b>';
+      td.onclick=function() {
+        if(this.style.color=='black'){
+          this.style.color='grey';
+        }else{
+          this.style.color='black';
+        }
+      };
+    }
+    $.ajax({
+      type: "POST",
+      url: "/getInvOptions/",
+      cache: false,
+      data: {opt:JSON.stringify(options), invid:'{{inv}}' },
+      dataType: 'json',
+      success: function(data) {
+        var memn=members.length;
+        for(i in data){
+          var ratio=data[i].length/memn;
+          impose_tds[options[i]].style.backgroundColor="rgb("+(255-parseInt(ratio*baseColorR))+","+(255-parseInt(ratio*baseColorG))+","+(255-parseInt(ratio*baseColorB))+")";
+        }
+      }
+    });
+  });
+  function modify(){
+    results=[];
+    for(opt in options){
+      if(impose_tds[options[opt]].style.color=='grey'){
+        results.push(options[opt]);
+      }
+    }
+    $.ajax({
+      type: "GET",
+      url: "/modiInv/",
+      cache: false,
+      data: {opt:JSON.stringify(results), invid:'{{inv}}' },
+      success: function(data) {
+        window.location.reload();
+      }
+    });
+  }
+  function join(){
+    results=[];
+    for(opt in options){
+      if(impose_tds[options[opt]].style.color=='grey'){
+        results.push(options[opt]);
+      }
+    }
+    $.ajax({
+      type: "GET",
+      url: "/joinInv/",
+      cache: false,
+      data: {opt:JSON.stringify(results), invid:'{{inv}}' },
+      success: function(data) {
+        window.location.reload();
+      }
+    });
+  }
+  function exitInv(){
+    $.ajax({
+      type: "POST",
+      url: "/exitInv/",
+      cache: false,
+      data: {invid:'{{inv}}' },
+      success: function(data) {
+        window.location.reload();
+      }
+    });
+  }
+  </script>
+  <style type="text/css">
+    td{ border:solid 1px #C0C0C0;
+      height:25px;
+      width:100px;}
+  </style>
 </head>
 <body>
 
@@ -15,29 +148,120 @@
     <div class="navbar-header">
       <a class="navbar-brand">Gooseberry</a>
     </div>
+    <ul class="nav navbar-nav navbar-right">
+      <li>
+        <a href="{{ url_for('logout') }}"><span class="glyphicon glyphicon-log-out"> Log Out </span></a>
+      </li>
+      <li>
+        <a href="#"><span class="glyphicon glyphicon-user"> {{uname}} </span></a>
+      </li>
+    </ul>
   </div>
 </nav>
+<!-- Modal -->
+<div class="modal fade" id="members" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Who has voted</h4>
+      </div>
+      <div class="modal-body" id = "membersModalBody">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
 
 <div class="container">
-  <h2> TITLE </h2><h4> voting </h4>
-  <p> starter:xxx </p>
-  <p> introduction </p>
-  <p> invitation period </p>
-  <form role="form">
-    <div class="checkbox">
-      <label><input type="checkbox" value="">slot 1</label>
-    </div>
-    <div class="checkbox">
-      <label><input type="checkbox" value="">slot 2</label>
-    </div>
-    <div class="checkbox disabled">
-      <label><input type="checkbox" value="" disabled>slot 3</label>
-    </div>
-  </form>
-  <button type="button" class="btn btn-success"> Join </button>
-  <button type="button" class="btn btn-danger"> Delete </button>
-  <button type="button" class="btn btn-warning"> Change </button>
-  <button type="button" class="btn btn-info"> Add To Group </button>
+  <h2 style="display:inline"> CLASS MEETING </h2> <h4 style="color:grey; display:inline"><b> voting... </b></h4>
+  <button id="setBtn" style="float:right" type="button" class="btn btn-info"> Set </button>
+  <button id="delBtn" style="float:right" type="button" class="btn btn-danger"> Delete </button>
+  <p id="creatorTag" style="color:grey"> creator : Evelyn(eli_home@outlook.com)</p> <p style="float:right" id="voteCounts" data-toggle="modal" data-target="#members">&nbspVotes: 37</p>
+  <p id="discription"> </p>
+
+  <table border="1"  bordercolor="#909090" class="pos_abs">
+    <tr>
+		<td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td>
+		</tr>
+    <tr>
+		<td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td>
+		</tr>
+    <tr>
+		<td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td>
+		</tr>
+    <tr>
+		<td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td>
+		</tr>
+    <tr>
+		<td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td>
+		</tr>
+    <tr>
+		<td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td>
+		</tr>
+    <tr>
+		<td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td>
+		</tr>
+    <tr>
+		<td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td>
+		</tr>
+    <tr>
+		<td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td>
+		</tr>
+    <tr>
+		<td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td>
+		</tr>
+    <tr>
+		<td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td>
+		</tr>
+    <tr>
+		<td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td>
+		</tr>
+    <tr>
+		<td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td>
+		</tr>
+    <tr>
+		<td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td>
+		</tr>
+    <tr>
+		<td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td>
+		</tr>
+    <tr>
+		<td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td>
+		</tr>
+    <tr>
+		<td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td>
+		</tr>
+    <tr>
+		<td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td>
+		</tr>
+    <tr>
+		<td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td>
+		</tr>
+    <tr>
+		<td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td>
+		</tr>
+    <tr>
+		<td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td>
+		</tr>
+    <tr>
+		<td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td>
+		</tr>
+    <tr>
+		<td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td>
+		</tr>
+    <tr>
+		<td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td>
+		</tr>
+  </table>
+  <p style="display:inline;color:black">O为可以参加(默认)&nbsp</p><p style="display:inline;color:grey">&nbspO为不可以参加</p></br>
+  <button id="joinBtn" onclick='join()' type="button" class="btn btn-success"> Join </button>
+  <button id="exitBtn" onclick='exitInv()' style="display:none" type="submit" class="btn btn-danger"> Exit </button>
+  <button id="modiBtn" onclick='modify()' style="display:none" type="button" class="btn btn-warning"> Modify </button>
 </div>
 
 </body>

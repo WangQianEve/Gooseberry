@@ -62,7 +62,7 @@ def index():
         else:
             return render_template("hello.html", msg="User ID or Password wrong!")
     if 'uid' in session:
-        
+
         table_data = json.dumps(get_table_info_by_usr(session['uid']))
         friendlist = database.findCon(session['uid'])
         usrlist = [[session['uid']]]
@@ -128,7 +128,7 @@ def delcon():
         usrdata = json.loads(request.get_json().encode("utf-8"))
         usrlist = usrdata['id']
         for fid in usrlist:
-            
+
             database.delCon(uid,fid)
         data = database.findCon(session['uid'])
         #data = {"id":[]}
@@ -179,13 +179,36 @@ def geteve():
             database.updateUser('invitations',json.dumps(ids),session['uid'])
         return json.dumps(results)
 
+@app.route("/modiInv/")
+def modiInv():
+    invId = request.args.get('invid')
+    options = json.loads(request.args.get('opt'))
+    uid = session['uid']
+    database.delOpp(invId,uid)
+    for op in options:
+        database.addOpp(invId,uid,op)
+    return 'success'
+
 @app.route("/joinInv/")
 def joinInv():
-    invId = request.args.get('inv')
+    invId = request.args.get('invid')
+    options = json.loads(request.args.get('opt'))
     uid = session['uid']
     database.invAddMember(invId,uid)
     database.userAddInv(invId,uid)
+    for op in options:
+        database.addOpp(invId,uid,op)
+    return 'success'
 
+@app.route("/exitInv/",methods=['GET','POST'])
+def exitInv():
+    if(request.method=='POST'):
+        invId = request.values.get('invid')
+        uid = session['uid']
+        database.invDelMember(invId,uid)
+        database.userDelInv(invId,uid)
+        database.delOpp(invId,uid)
+        return 'success'
 
 @app.route("/getcon/",methods=['GET','POST'])
 def getcon():
@@ -198,18 +221,18 @@ def count_time_unit(t):
     print " count time unit "
     d1 = datetime.datetime(int('20'+t[0:2]), int(t[2:4]), int(t[4:6]))
     d2 = datetime.datetime(int('20'+cur_date[0:2]), int(cur_date[2:4]), int(cur_date[4:6]))
-    time_num = (d1-d2).days * lineNum + int(t[6:8])*lineNum/24 
+    time_num = (d1-d2).days * lineNum + int(t[6:8])*lineNum/24
     print time_num
     return time_num
-    
+
 def calc_time(time_num):
     t = 0
     print " month "
     print int(cur_date[2:4])
     print cur_date
     d1 = datetime.datetime(int('20'+cur_date[0:2]), int(cur_date[2:4]), int(cur_date[4:6]))
-    d2 = (d1 + datetime.timedelta(days=time_num/lineNum)).strftime('%y%m%d')  
-    t = d2 + '%02d' %(time_num % lineNum) + '00' 
+    d2 = (d1 + datetime.timedelta(days=time_num/lineNum)).strftime('%y%m%d')
+    t = d2 + '%02d' %(time_num % lineNum) + '00'
     return t
 
 def get_table_info_by_usr(usr):
@@ -225,7 +248,7 @@ def get_table_info_by_usr(usr):
             end_num = count_time_unit(end_time)
             act = {"title":i[0],"start":start_num,"end":end_num}
             table_data["time"].append(act)
-    print "table data "    
+    print "table data "
     print table_data
 
     return table_data
@@ -297,7 +320,7 @@ def save_activity():
             #update user data
 
             #save to the database
-            
+
             database.addTime(session['uid'], new_act["title"], calc_time(new_act["start"]), calc_time(new_act["end"]))
         return json.dumps(new_act)
 
@@ -321,7 +344,7 @@ def get_color():
             #usrdata = request.get_json()
             usrdata = json.loads(request.get_json().encode("utf-8"))
             usrlist = usrdata['id']
-            
+
             usrlist.append(session['uid'])
 
         print usrlist
@@ -331,16 +354,24 @@ def get_color():
 
 @app.route("/invitation/<inv_id>")
 def invitation(inv_id):
-    invitation = 'inv'
-    return render_template("invitation.html", data=invitation, on_create = True)
-    # if not signed-in:
-    #     return redirect(url_for('hello'))
-    # else:
-    #     if id valid:
-    #         get invitation
-    #         return render_template("invitation.html", data=invitation, on_create = on_create)
-    #     else:
-    #         return "Invitation does not exist!"
+    if 'uid' not in session:
+        return redirect(url_for('index'))
+    invdata = database.findInvById("title,status,creator,discription,options,members,startdate",inv_id)
+    if(len(invdata))==0:
+        return "Invitation does not exist!"
+    mopt = database.findOpp(inv_id,session['uid'])
+    return render_template("invitation.html", moptions=json.dumps(mopt), inv=inv_id, uid=session['uid'], uname=session['username'], data=json.dumps(invdata), on_create = True)
+
+@app.route("/getInvOptions/",methods=['GET','POST'])
+def getInvOptions():
+    if request.method == 'POST':
+        inv_id=request.values.get('invid')
+        options=json.loads(request.values.get('opt'));
+        results=[]
+        for opt in options:
+            l = database.findVoters(inv_id,opt)
+            results.append(l)
+        return json.dumps(results)
 
 @app.route("/about/")
 def about():

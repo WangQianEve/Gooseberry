@@ -10,8 +10,7 @@
   <!-- <script type="text/javascript" src="/static/script/tabs.js"></script> -->
   <script>
   function delcon(fid, fname){
-    
-    
+     
     $.ajax({
       type: "GET",
       url: "/delcon/",
@@ -172,6 +171,7 @@
   }
   function getCon(){
 	set_color()
+    //clear
     $.ajax({
       type: "POST",
       url: "/getcon/",
@@ -190,6 +190,39 @@
       }
     });
     return true;
+  }
+  
+  function getCalendar(){
+     
+	 
+  }
+  function create_invitation(){
+	$('#invModal').modal();
+  }
+  
+  function submit_inv(){
+	var inv_name = $('#inv_name').val();
+	var inv_des = $('#inv_description').val();
+	
+	var new_inv = {"title":inv_name,"des":inv_des,"timelist":impose_selectedlist};
+	var new_inv_json = JSON.stringify(new_inv);
+	
+	alert(inv_name + inv_des);
+	$.ajax({
+				type: 'POST',
+				url: "/createInvitation/",
+				data: JSON.stringify(new_inv_json), 
+				contentType: 'application/json; charset=UTF-8',
+				dataType: 'json', 
+				success: function(data) { 
+					console.log("sent")
+					console.log(data)
+				},
+				error: function(e) {
+				console.log(e)
+				}
+			});
+			
   }
   </script>
 </head>
@@ -213,7 +246,7 @@
 
 <div class="container">
   <ul class="nav nav-tabs">
-    <li class="active"><a data-toggle="tab" href="#calendar">Calendar</a></li>
+    <li class="active"><a data-toggle="tab" href="#calendar" onclick="getCalendar()">Calendar</a></li>
     <li><a data-toggle="tab" href="#invitations" onclick="getInv()">Invitations</a></li>
     <li><a data-toggle="tab" href="#events" onclick="getEve()">Events</a></li>
     <li><a data-toggle="tab" href="#goose" onclick="getCon()">Goose</a></li>
@@ -418,6 +451,7 @@
 		<td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td><td height="15" width="100" class="timeunit2"></td>
 		</tr>
 	</table>
+        <button type="button" onclick="create_invitation()" class="btn btn-success" data-dismiss="modal">Create Invitation</button>
 	</div>
 	</div>
 	<div class="col-sm-2">
@@ -459,6 +493,30 @@
 	 </div>
  </div>
 
+
+<div class="modal fade" id="invModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	 <div class="modal-dialog" role="document">
+	  <div class="modal-content">
+	  <div class="modal-header">
+	   <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+	   <h4 class="modal-title" id="myModalLabel">新增邀请</h4>
+	  </div>
+	  <div class="modal-body">
+	 
+	   <div class="form-group">
+	   <label for="txt_statu">活动名称</label>
+	   <input type="text" name="inv_name" class="form-control" id="inv_name" placeholder="名称">
+		<label for="txt_statu">活动描述</label>
+	   <input type="text" name="inv_description" class="form-control" id="inv_description" placeholder="活动内容">
+	   </div>
+	  </div>
+	  <div class="modal-footer">
+	   <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>关闭</button>
+	   <button type="button" id="btn_submit_inv" class="btn btn-primary" data-dismiss="modal" onclick="submit_inv()"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>保存</button>
+	  </div>
+	  </div>
+	 </div>
+ </div>
 </div>
 
 <!-- Modal -->
@@ -498,11 +556,7 @@
 	var linenum = 24;
 	
 	var tds = $(".timeunit1");
-	var impose_tds = $(".timeunit2");
 	
-	    for(var i = 0; i < impose_tds.length; i++){
-            impose_tds[i].index = i;
-		}
 	var multi_flag = false;
 	var start_index = -1;
 	
@@ -770,6 +824,107 @@
 	}
 	
 	
+	var impose_selectedlist = [];
+	var impose_start_index = -1;
+	
+	function index_in_impose_selectedlist(num){
+	
+		for(var i = 0; i < impose_selectedlist.length; i++){
+			if(num == impose_selectedlist[i]){
+				return i;
+			}
+		}
+		
+		return -1;
+	}
+	
+	function render_impose_table_data(){
+		for(var i = 0; i < impose_tds.length; i++){
+			impose_tds[i].style.backgroundColor = colorlist[0];
+		}
+		/*for(var i = 0; i < table_data.time.length; i++){
+			var act = table_data.time[i];
+			console.log("act: "+JSON.stringify(act));
+			for(var j = act.start; j <= act.end; j++){
+				//console.log(j)
+				var t_index = myid_to_id(j);
+				//console.log(t_index)
+				tds[t_index].innerText = act.title;
+				tds[t_index].style.backgroundColor = colorlist[1];
+			}
+		}*/
+		set_color()
+		//alert(impose_selectedlist)
+		for(var i = 0; i < impose_selectedlist.length; i++){
+			impose_tds[myid_to_id(impose_selectedlist[i])].style.backgroundColor = 'grey';
+		}
+		
+	}
+	
+    var impose_tds = $(".timeunit2");
+	for(var i = 0; i < impose_tds.length; i++){
+        impose_tds[i].index = i;
+        impose_tds[i].innerHTML = 'O';
+		impose_tds[i].style.backgroundColor = colorlist[0]
+        impose_tds[i].onclick = function (e) {
+		//Add the function of multichoice
+			console.log(e.shiftKey);
+			console.log(this.index);
+		    if(e.shiftKey && impose_start_index != -1){
+			    //Judge which is bigger
+				if(impose_start_index % 7 > this.index % 7 || (impose_start_index % 7 == this.index % 7 &&  parseInt(impose_start_index / 7)>parseInt(this.index / 7)))
+				{
+					var x1=impose_start_index % 7,y1=parseInt(impose_start_index / 7),x0= this.index % 7,y0 = parseInt(this.index / 7);
+				}
+				else{
+					var x0=impose_start_index % 7,y0=parseInt(impose_start_index / 7),x1= this.index % 7,y1 = parseInt(this.index / 7);
+				}
+				console.log(x0+" "+y0+" "+x1+" "+y1);
+				var count = (x1*linenum+y1)-(x0*linenum+y0);
+				console.log("count:"+count);
+				for(var i =0;i<=count; i++){
+					var tmp = (x0*linenum+y0+i);
+					var t_index = myid_to_id(tmp);
+					if(index_in_impose_selectedlist(id_to_myid(impose_start_index)) != -1){
+						var tt = index_in_impose_selectedlist(tmp)
+						if(tt != -1){
+							impose_selectedlist.splice(tt,1);
+						}						
+					}
+					else {
+						var tt = index_in_impose_selectedlist(tmp)
+						if(tt == -1){
+							impose_selectedlist.push(tmp);
+						}
+					}
+				}
+			}
+			//Not pressing shift
+			else{
+				if(index_in_impose_selectedlist(id_to_myid(this.index)) != -1){
+					impose_start_index = this.index;
+					var tmp = index_in_impose_selectedlist(id_to_myid(this.index))
+					
+					if(tmp != -1){
+						impose_selectedlist.splice(tmp,1);
+					}
+					
+				}
+				else {
+					impose_start_index = this.index;
+					var tmp = index_in_impose_selectedlist(id_to_myid(this.index));
+					//alert("tmp ");
+					if(tmp == -1){
+						impose_selectedlist.push(id_to_myid(this.index));
+					}
+				
+				}
+			}
+            render_impose_table_data()
+        }
+    }
+    
+        
 	var bkdata0='{{bgcolor|tojson}}';
 	//console.log(bkdata0);
 	bkdata0=bkdata0.substr(1,bkdata0.length-2);

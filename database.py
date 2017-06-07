@@ -8,13 +8,13 @@ userPage = "users"
 invitationPage = "invitations"
 contactPage = "contacts"
 timePage = "times"
+optionPage = "options"
 
 InvIdLength = 10
 calendarW = 7
 
 def ranchar(i):
     return ''.join(random.sample(string.ascii_letters + string.digits, i))
-
 #User
 def addUser(uid, psw, name, timezone):
     sql = "insert into %s (id, psw, name, timezone) values ('%s','%s','%s',%d)"% (userPage, uid, psw, name, timezone)
@@ -30,11 +30,20 @@ def updateUser(goal,val,uid):
 
 def userAddInv(inv,uid):
     sql = "select invitations from %s where id='%s'" % (userPage,uid)
-    print exe(sql)
+    exe(sql)
     invs = json.loads(exe(sql)[0][0])
     invs.append(inv)
     sql = "update %s set invitations='%s' where id='%s'" % (userPage,json.dumps(invs),uid)
     exe(sql)
+
+def userDelInv(inv,uid):
+    sql = "select invitations from %s where id='%s'" % (userPage,uid)
+    exe(sql)
+    invs = json.loads(exe(sql)[0][0])
+    if inv in invs:
+        invs.remove(inv)
+        sql = "update %s set invitations='%s' where id='%s'" % (userPage,json.dumps(invs),uid)
+        exe(sql)
 
 # modify name or psw or timezone
 
@@ -65,6 +74,25 @@ def relation(uid,fid):
     goal = "id,name,nickname"
     sql = "select %s from %s where uid='%s' and id='%s' " % (goal,contactPage,uid,fid)
     return exe(sql)
+# optionPage
+def addOpp(inv,uid,op):
+    sql = "select opt from %s where uid ='%s' and iid='%s' and opt='%s'" % (optionPage, uid, inv, op)
+    t = exe(sql)
+    if len(t)==0:
+        sql = "insert into %s (uid, iid, opt) values ('%s','%s','%s' )"% (optionPage, uid, inv, op)
+        exe(sql)
+
+def delOpp(inv,uid):
+    sql = "delete from %s where uid='%s' and iid='%s'" % (optionPage, uid, inv)
+    exe(sql)
+
+def findOpp(inv,uid):
+    sql = "select opt from %s where uid ='%s' and iid='%s'" % (optionPage, uid, inv)
+    return exe(sql)
+
+def findVoters(inv,op):
+    sql = "select uid from %s where opt ='%s' and iid='%s'" % (optionPage, op, inv)
+    return exe(sql)
 
 #time
 def addTime(uid,title,start,end):
@@ -74,7 +102,6 @@ def addTime(uid,title,start,end):
 
 def deleteTime(uid, title, start, end):
     sql = "delete from %s where uid='%s' and title='%s' and start='%s' and end='%s'" % (timePage,uid,title,start,end)
-    print sql
     exe(sql)
 
 def findTime(uid, start):
@@ -109,6 +136,13 @@ def invAddMember(inv, uid):
     sql = "select members from %s where id='%s'" % (invitationPage,inv)
     mems = json.loads(exe(sql)[0][0])
     mems.append(uid)
+    sql = "update %s set members='%s' where id='%s'" % (invitationPage,json.dumps(mems),inv)
+    exe(sql)
+
+def invDelMember(inv, uid):
+    sql = "select members from %s where id='%s'" % (invitationPage,inv)
+    mems = json.loads(exe(sql)[0][0])
+    mems.remove(uid)
     sql = "update %s set members='%s' where id='%s'" % (invitationPage,json.dumps(mems),inv)
     exe(sql)
 

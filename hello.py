@@ -153,18 +153,41 @@ def geteve():
             database.updateUser('invitations',json.dumps(ids),session['uid'])
         return json.dumps(results)
 
+@app.route("/modiInv/")
+def modiInv():
+    invId = request.args.get('invid')
+    options = json.loads(request.args.get('opt'))
+    uid = session['uid']
+    database.delOpp(invId,uid)
+    for op in options:
+        database.addOpp(invId,uid,op)
+    return 'success'
+
 @app.route("/joinInv/")
 def joinInv():
-    invId = request.args.get('inv')
+    invId = request.args.get('invid')
+    options = json.loads(request.args.get('opt'))
     uid = session['uid']
     database.invAddMember(invId,uid)
     database.userAddInv(invId,uid)
+    for op in options:
+        database.addOpp(invId,uid,op)
+    return 'success'
 
+@app.route("/exitInv/",methods=['GET','POST'])
+def exitInv():
+    if(request.method=='POST'):
+        invId = request.values.get('invid')
+        uid = session['uid']
+        database.invDelMember(invId,uid)
+        database.userDelInv(invId,uid)
+        database.delOpp(invId,uid)
+        return 'success'
 
 @app.route("/getcon/",methods=['GET','POST'])
 def getcon():
     if request.method == 'POST':
-#        return json.dumps(database.findCon(session['uid']))
+        #return json.dumps(database.findCon(session['uid']))
         return json.dumps({data:"getcon"})
 
 
@@ -276,16 +299,24 @@ def get_color():
 
 @app.route("/invitation/<inv_id>")
 def invitation(inv_id):
-    invitation = 'inv'
-    return render_template("invitation.html", data=invitation, on_create = True)
-    # if not signed-in:
-    #     return redirect(url_for('hello'))
-    # else:
-    #     if id valid:
-    #         get invitation
-    #         return render_template("invitation.html", data=invitation, on_create = on_create)
-    #     else:
-    #         return "Invitation does not exist!"
+    if 'uid' not in session:
+        return redirect(url_for('index'))
+    invdata = database.findInvById("title,status,creator,discription,options,members,startdate",inv_id)
+    if(len(invdata))==0:
+        return "Invitation does not exist!"
+    mopt = database.findOpp(inv_id,session['uid'])
+    return render_template("invitation.html", moptions=json.dumps(mopt), inv=inv_id, uid=session['uid'], uname=session['username'], data=json.dumps(invdata), on_create = True)
+
+@app.route("/getInvOptions/",methods=['GET','POST'])
+def getInvOptions():
+    if request.method == 'POST':
+        inv_id=request.values.get('invid')
+        options=json.loads(request.values.get('opt'));
+        results=[]
+        for opt in options:
+            l = database.findVoters(inv_id,opt)
+            results.append(l)
+        return json.dumps(results)
 
 @app.route("/about/")
 def about():

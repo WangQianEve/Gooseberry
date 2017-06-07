@@ -298,15 +298,21 @@ def cal_color(usrlist):
 
 
 # evoked by user.html
-@app.route("/createInvitation/")
+@app.route("/createInvitation/",methods=['POST','GET'])
 def createInvitation():
-    id=002
-    # temp
-    return redirect(url_for('invitation', inv_id=id, on_create=True ))
-    # if success:
-    #     return redirect(url_for('invitation', inv_id=id, on_create=True ))
-    # else:
-    #     return 0
+		#new_inv = json.dumps({"title":'',"start":0,"end":0})
+        if request.method == 'POST':
+            new_inv = json.loads(request.get_json().encode("utf-8"))
+            print "new inv!!"
+            print new_inv
+            #update user data
+            goal = "id,title,creator,options,startdate,discription"
+            data = "'"+new_inv["title"] +"'"+ "," + "'"+session["uid"]+"'" + "," +"'"+ str(new_inv["timelist"]) +"'"+ "," + "'"+cur_date[0:6] +"'"+ "," + "'"+new_inv["des"]+"'"
+            #save to the database
+            print goal
+            print data
+            database.addInv(goal,data)
+        return json.dumps(new_inv)
 
 @app.route("/save_time/",methods=['POST','GET'])
 def save_time():
@@ -352,9 +358,6 @@ def get_color():
             #usrdata = request.get_json()
             usrdata = json.loads(request.get_json().encode("utf-8"))
             usrlist = usrdata['id']
-
-            usrlist.append(session['uid'])
-
         print usrlist
         bkdata= json.dumps(cal_color(usrlist));
         print bkdata

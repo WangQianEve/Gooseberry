@@ -142,7 +142,7 @@
           else if (obj[str][2]=='f'){
             status="finished";
           }
-          $('#invTbody').append("<tr><td><a href=\"{{url_for('invitation',inv_id='"+obj[str][0]+"',host='true')}}\">"+obj[str][1]+"</a></td><td>"+status+"</td><td>"+obj[str][3]+"</td></tr>");
+          $('#invTbody').append("<tr><td><a href='/invitation/"+obj[str][0]+"'>"+obj[str][1]+"</a></td><td>"+status+"</td></tr>");
         }
       }
     });
@@ -164,7 +164,7 @@
           else if (data[n][2]=='f'){
             status="finished";
           }
-          $('#eveTbody').append("<tr><td><a href=\"{{url_for('invitation',inv_id='"+data[n][0]+"',host='true')}}\">"+data[n][1]+"</a></td><td>"+status+"</td><td>"+data[n][3]+"</td><td>"+data[n][4]+"</td></tr>");
+          $('#eveTbody').append("<tr><td><a href='/invitation/"+data[n][0]+"'>"+data[n][1]+"</a></td><td>"+status+"</td><td>"+data[n][3]+"</td></tr>");
         }
       }
     });
@@ -303,7 +303,6 @@
           <tr>
             <th>Title</th>
             <th>State</th>
-            <th>Votes</th>
           </tr>
         </thead>
         <tbody id="invTbody">
@@ -318,7 +317,6 @@
           <tr>
             <th>Title</th>
             <th>State</th>
-            <th>Votes</th>
             <th>Creator</th>
           </tr>
         </thead>

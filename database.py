@@ -139,6 +139,13 @@ def invAddMember(inv, uid):
     sql = "update %s set members='%s' where id='%s'" % (invitationPage,json.dumps(mems),inv)
     exe(sql)
 
+def invSettle(inv, ops):
+    s='f'
+    if len(ops)==0:
+        s='v'
+    sql = "update %s set final='%s',status='%s' where id='%s'" % (invitationPage,json.dumps(ops),s,inv)
+    exe(sql)
+
 def invDelMember(inv, uid):
     sql = "select members from %s where id='%s'" % (invitationPage,inv)
     mems = json.loads(exe(sql)[0][0])

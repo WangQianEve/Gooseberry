@@ -159,7 +159,7 @@ def setnickname():
 @app.route("/getinv/",methods=['GET','POST'])
 def getinv():
     if request.method == 'POST':
-        return json.dumps(database.findInvByCreator("iid,ititle,istate,icount",session['uid']))
+        return json.dumps(database.findInvByCreator("id,title,status",session['uid']))
 
 @app.route("/geteve/",methods=['GET','POST'])
 def geteve():
@@ -169,7 +169,7 @@ def geteve():
         flag = False
         results = []
         for iid in ids:
-            t = database.findInvById("id,title,state,count,creator",iid)
+            t = database.findInvById("id,title,status,creator",iid)
             if len(t)==0:
                 ids.remove(iid)
                 flag = True
@@ -198,6 +198,14 @@ def joinInv():
     database.userAddInv(invId,uid)
     for op in options:
         database.addOpp(invId,uid,op)
+    return 'success'
+
+@app.route("/setInv/")
+def setInv():
+    invId = request.args.get('invid')
+    options = json.loads(request.args.get('opt'))
+    uid = session['uid']
+    database.invSettle(invId,options)
     return 'success'
 
 @app.route("/exitInv/",methods=['GET','POST'])
@@ -356,7 +364,7 @@ def get_color():
 def invitation(inv_id):
     if 'uid' not in session:
         return redirect(url_for('index'))
-    invdata = database.findInvById("title,status,creator,discription,options,members,startdate",inv_id)
+    invdata = database.findInvById("title,status,creator,discription,options,members,startdate,final",inv_id)
     if(len(invdata))==0:
         return "Invitation does not exist!"
     mopt = database.findOpp(inv_id,session['uid'])
@@ -379,7 +387,7 @@ def about():
 
 @app.route("/tutorial/")
 def tutorial():
-    return "Under construction"
+    return render_template("tutorial.html")
 
 @app.route("/timetable", methods=['POST','GET'])
 def timetable():

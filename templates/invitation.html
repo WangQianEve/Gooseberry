@@ -65,14 +65,19 @@
     options=JSON.parse(data[0][4]);
     for(var i = 0;i<options.length; i++){
       td=impose_tds[options[i]];
-      td.innerHTML='<b>O</b>';
+      td.innerHTML='O';
       td.onclick=function() {
         if(this.style.color=='black'){
           this.style.color='grey';
-        }else{
+        }else if(this.style.color=='grey'){
           this.style.color='black';
         }
       };
+    }
+    finals = JSON.parse(data[0][7]);
+    for(var i = 0;i<finals.length; i++){
+      td=impose_tds[finals[i]];
+      td.innerHTML='<b>√</b>';
     }
     $.ajax({
       type: "POST",
@@ -99,6 +104,23 @@
     $.ajax({
       type: "GET",
       url: "/modiInv/",
+      cache: false,
+      data: {opt:JSON.stringify(results), invid:'{{inv}}' },
+      success: function(data) {
+        window.location.reload();
+      }
+    });
+  }
+  function settle(){
+    results=[];
+    for(opt in options){
+      if(impose_tds[options[opt]].style.color=='grey'){
+        results.push(options[opt]);
+      }
+    }
+    $.ajax({
+      type: "GET",
+      url: "/setInv/",
       cache: false,
       data: {opt:JSON.stringify(results), invid:'{{inv}}' },
       success: function(data) {
@@ -179,7 +201,7 @@
 
 <div class="container">
   <h2 style="display:inline"> CLASS MEETING </h2> <h4 style="color:grey; display:inline"><b> voting... </b></h4>
-  <button id="setBtn" style="float:right" type="button" class="btn btn-info"> Set </button>
+  <button id="setBtn" onclick="settle()" style="float:right" type="button" class="btn btn-info"> Set </button>
   <button id="delBtn" style="float:right" type="button" class="btn btn-danger"> Delete </button>
   <p id="creatorTag" style="color:grey"> creator : Evelyn(eli_home@outlook.com)</p> <p style="float:right" id="voteCounts" data-toggle="modal" data-target="#members">&nbspVotes: 37</p>
   <p id="discription"> </p>

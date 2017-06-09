@@ -198,11 +198,16 @@
   function submit_inv(){
     var inv_name = $('#inv_name').val();
     var inv_des = $('#inv_description').val();
-
+	//change the ids in impose_selectedlist
+	//For convenience
+	for(var i = 0 ;i<impose_selectedlist.length;i++)
+	{
+		impose_selectedlist[i] = myid_to_id(impose_selectedlist[i]);
+	}
+	
     var new_inv = {"title":inv_name,"des":inv_des,"timelist":impose_selectedlist};
     var new_inv_json = JSON.stringify(new_inv);
 
-    alert(inv_name + inv_des);
     $.ajax({
                 type: 'POST',
                 url: "/createInvitation/",
@@ -546,6 +551,7 @@
     var colorlist = ["rgb(255, 255, 255)","rgb(230, 202, 255)","rgb(202, 142, 255)","rgb(177, 91, 255)"];
     //Will be changed
     var linenum = 24;
+	
 
     var tds = $(".timeunit1");
     var impose_tds = $(".timeunit2");
@@ -572,10 +578,13 @@
             console.log("act: "+JSON.stringify(act));
             for(var j = act.start; j <= act.end; j++){
                 //console.log(j)
-                var t_index = myid_to_id(j);
-                //console.log(t_index)
-                tds[t_index].innerText = act.title;
-                tds[t_index].style.backgroundColor = colorlist[1];
+				if(j>=0){
+					var t_index = myid_to_id(j);
+					//console.log(t_index)
+					tds[t_index].innerText = act.title;
+					tds[t_index].style.backgroundColor = colorlist[1];
+				}
+                
             }
         }
         set_color_by_selectedlist();
@@ -927,6 +936,7 @@
     console.log(bkdata);
 
     function set_color(){
+	
         for(var i = 0;i<bkdata.color1.length; i++){
             impose_tds[myid_to_id(bkdata.color1[i])].style.backgroundColor = colorlist[1];
         }

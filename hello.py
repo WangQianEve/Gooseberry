@@ -58,11 +58,10 @@ def index():
             bkdata= json.dumps(cal_color(usrlist))
             print "bkdata"
             print bkdata
-            return render_template("index.html", uname=session['username'],bgcolor = bkdata,table_data=table_data,friendlist = friendlist)
+            return render_template("index.html", uid=session['uid'], uname=session['username'],bgcolor = bkdata,table_data=table_data,friendlist = friendlist)
         else:
             return render_template("hello.html", msg="User ID or Password wrong!")
     if 'uid' in session:
-
         table_data = json.dumps(get_table_info_by_usr(session['uid']))
         friendlist = database.findCon(session['uid'])
         usrlist = [[session['uid']]]

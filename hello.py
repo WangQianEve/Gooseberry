@@ -8,6 +8,7 @@ from data import timeunit,timetable,activity,user
 import time,datetime
 
 app = Flask(__name__)
+
 # set the secret key.  keep this really secret:
 app.secret_key = '|G\x8f\x7f\x02\xb87\x9cYai\xc4D\x11\xd4\xf4j>\x1a\x15\xdc\x95l\x1f'
 
@@ -21,23 +22,6 @@ def update_user_calendar(usr,time_unit_list):
 lineNum = 24
 time_amount = 7*lineNum
 cur_date = time.strftime('%y%m%d0000',time.localtime(time.time()))
-user1 = user(001)
-user2 = user(002)
-user3 = user(003)
-cur_user = ''
-total_user = [user1,user2,user3]
-default_bkdata = {"color1":[],"color2":[],"color3":[5,17,25,64,100]}
-
-user1.friendlist.append(user2)
-user1.friendlist.append(user3)
-list1=[5,17,25,64,100]
-list2=[5,22,64,80]
-list3=[5,20,25,90]
-
-update_user_calendar(user1,list1)
-update_user_calendar(user2,list2)
-update_user_calendar(user3,list3)
-
 
 @app.route("/", methods=['GET', 'POST'])
 def index():
@@ -311,27 +295,11 @@ def createInvitation():
             database.addInv(goal,data)
         return json.dumps(new_inv)
 
-@app.route("/save_time/",methods=['POST','GET'])
-def save_time():
-        if request.method == 'POST':
-            data = json.loads(request.get_json().encode("utf-8"))
-            default_bkdata['color3']=data['id']
-            #save to the user
-            update_user_calendar(cur_user,default_bkdata['color3'])
-        bkdata= json.dumps(default_bkdata);
-        return bkdata
-
 @app.route("/save_activity/",methods=['POST','GET'])
 def save_activity():
         new_act = json.dumps({"title":'',"start":0,"end":0})
         if request.method == 'POST':
             new_act = json.loads(request.get_json().encode("utf-8"))
-            print "new act!!"
-            print new_act
-            #update user data
-
-            #save to the database
-
             database.addTime(session['uid'], new_act["title"], calc_time(new_act["start"]), calc_time(new_act["end"]))
         return json.dumps(new_act)
 

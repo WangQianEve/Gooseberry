@@ -1,10 +1,13 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
+# BY EVELYN WANG
 import MySQLdb
 userPage = "users"
 invitationPage = "invitations"
 contactPage = "contacts"
 timePage = "times"
+optionPage = "options"
+
 def cleanDb():
     pages=[userPage,invitationPage,contactPage,timePage]
     for page in pages:
@@ -12,7 +15,6 @@ def cleanDb():
         exe(sql)
 
 def createPages():
-	# createPages()
 	sql ="CREATE TABLE IF NOT EXISTS "+userPage+"""(
 	id VARCHAR(40) NOT NULL,
 	psw VARCHAR(15) NOT NULL,
@@ -45,6 +47,14 @@ def createPages():
     )ENGINE=InnoDB DEFAULT CHARSET=utf8;
     """
     exe(sql)
+    sql ="CREATE TABLE IF NOT EXISTS "+optionPage+"""(
+        uid VARCHAR(40) NOT NULL,
+        iid VARCHAR(10) NOT NULL,
+        op VARCHAR(100) default '[]',
+        INDEX (uid,id)
+    )ENGINE=InnoDB DEFAULT CHARSET=utf8;
+    """
+    exe(sql)
     sql ="CREATE TABLE IF NOT EXISTS "+timePage+"( \
         %s VARCHAR(40) NOT NULL, \
         %s VARCHAR(40) NOT NULL, \
@@ -54,21 +64,13 @@ def createPages():
         INDEX (%s) \
     )ENGINE=InnoDB DEFAULT CHARSET=utf8;" % ("id","title","start","end","iid","id,start,end")
     exe(sql)
-def changePage():
-    sql = """
-    alter table invitations MODIFY id VARCHAR(10);
-    alter table invitations add column members varchar(4000);
-    alter table invitations CHANGE creator creator VARCHAR(40);
-    """
-    sql = """
-    alter table users add column invitations VARCHAR(6000)
-    """
-    exe(sql)
 
 def exe(sql):
     db = MySQLdb.connect(host='127.0.0.1',port = 3306,user='root', passwd='',db ='gooseberry')
     cursor = db.cursor()
     results = []
+    print "-------SQL COMMAND------"
+    print sql
     try:
        cursor.execute(sql)
        results = cursor.fetchall()
@@ -76,5 +78,6 @@ def exe(sql):
     except:
        db.rollback()
     db.close()
+    print "-------SQL RESULT------"
     print results
     return results

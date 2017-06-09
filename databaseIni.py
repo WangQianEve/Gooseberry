@@ -25,10 +25,13 @@ def createPages():
     sql ="CREATE TABLE IF NOT EXISTS "+invitationPage+"""(
     id VARCHAR(10) NOT NULL,
     title VARCHAR(40) NOT NULL,
-    state VARCHAR(1) NOT NULL,
-    count INT DEFAULT 0,
+    status VARCHAR(1) default 'v',
     creator VARCHAR(40) NOT NULL,
     members varchar(4000) DEFAULT '[]',
+    options VARCHAR(100) default '[]',
+    description varchar(100) default '',
+    startdate varchar(6) NOT NULL,
+    final varchar(100) default '',
     PRIMARY KEY ( id )
     )ENGINE=InnoDB DEFAULT CHARSET=utf8;
     """

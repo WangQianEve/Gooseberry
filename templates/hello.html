@@ -27,7 +27,11 @@
 </nav>
 
 <div class="container">
-  <h2>{{msg}}</h2>
+  {% if msg %}
+  <div class="alert alert-danger" align="center">
+    <strong>{{msg}}</strong>
+  </div>
+  {% endif %}
   <img src="http://chuantu.biz/t5/101/1496814596x2728278722.jpg" alt="Intro" width="1200"></img>
   </br>
   </br>

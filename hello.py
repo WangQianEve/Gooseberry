@@ -69,14 +69,18 @@ def index():
         bkdata= json.dumps(cal_color(usrlist));
         print "bkdata"
         print bkdata
-        return render_template("index.html", uname=session['username'],bgcolor = bkdata,table_data=table_data,friendlist = friendlist)
+        return render_template("index.html", uid=session['uid'], uname=session['username'],bgcolor = bkdata,table_data=table_data,friendlist = friendlist)
     return render_template("hello.html")
 
 @app.route("/signup",methods =['GET','POST'])
 def signup():
     if request.method == 'POST':
-        database.addUser(request.form['id'],request.form['psw'],request.form['name'],8)
-        return render_template("hello.html", msg="Sign Up Succeed!")
+        if(len(database.findUser('id',request.form['id']))>0):
+            return render_template("hello.html", msg="User Exists! Please Log in~")
+        if(isinstance(database.addUser(request.form['id'],request.form['psw'],request.form['name'],8),tuple)):
+            return render_template("hello.html", msg="Sign Up Succeed!")
+        else:
+            return render_template("hello.html", msg="Something Wrong!")
 
 @app.route('/logout')
 def logout():
@@ -112,38 +116,33 @@ def searchpeople():
         print result
         return json.dumps(result)
 
-@app.route("/addcon/")
+@app.route("/addcon/",methods=['GET','POST'])
 def addcon():
-    uid=session['uid']
-    fid=request.args.get('id')
-    fname=request.args.get('name')
-    database.addCon(uid,fid,fname,"")
-    return "success"
+    if request.method == 'POST':
+        uid=session['uid']
+        fid=request.form['id']
+        fname=request.form['name']
+        database.addCon(uid,fid,fname,"")
+        return json.dumps(database.findCon(uid))
 
 @app.route("/delcon/",methods=['GET','POST'])
 def delcon():
     if request.method == 'POST':
         uid=session['uid']
-        print request.get_json()
+        fid=request.form['id']
+        database.delCon(uid,fid)
+        return json.dumps(database.findCon(uid))
+
+@app.route("/delcons/",methods=['GET','POST'])
+def delcons():
+    if request.method == 'POST':
+        uid=session['uid']
         usrdata = json.loads(request.get_json().encode("utf-8"))
         usrlist = usrdata['id']
         for fid in usrlist:
-
             database.delCon(uid,fid)
         data = database.findCon(session['uid'])
-        #data = {"id":[]}
-        #for i in list:
-        #    data["id"].append(i[0])
-        #data = json.dumps(data)
-        print "friendlist"
-        print data
         return json.dumps(data)
-    else:
-        uid=session['uid']
-        fid=request.args.get('id')
-        database.delCon(uid,fid)
-        print "success"
-        return "success"
 
 @app.route("/setnickname/")
 def setnickname():
@@ -151,10 +150,10 @@ def setnickname():
     fid=request.args.get('id')
     fnickname = request.args.get('nickname')
     results = database.updateCon(uid,fid,"nickname",fnickname)
-    if isinstance(results,(list)):
+    if isinstance(results,list):
         return "error"
     else:
-        return "success"
+        return json.dumps(database.findCon(uid))
 
 @app.route("/getinv/",methods=['GET','POST'])
 def getinv():
@@ -222,7 +221,6 @@ def exitInv():
 def getcon():
     if request.method == 'POST':
         return json.dumps(database.findCon(session['uid']))
-        #return json.dumps({"data":"getcon"})
 
 def count_time_unit(t):
     time_num = 0
@@ -353,15 +351,10 @@ def delete_activity():
 
 @app.route("/get_color/",methods=['POST','GET'])
 def get_color():
-        usrlist = [session['uid']]
         if request.method == 'POST':
-            #usrdata = request.get_json()
             usrdata = json.loads(request.get_json().encode("utf-8"))
             usrlist = usrdata['id']
-            usrlist.append(session['uid'])
-        print usrlist
         bkdata= json.dumps(cal_color(usrlist));
-        print bkdata
         return bkdata
 
 @app.route("/invitation/<inv_id>")

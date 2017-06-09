@@ -13,6 +13,7 @@
   var baseColorR = 255-80;
   var baseColorG = 255-30;
   var baseColorB = 255-130;
+  var color = "red";
   $(document).ready(function(){
     var dataString = {{data|tojson}};
     var data = JSON.parse(dataString);
@@ -60,7 +61,7 @@
       td.style.color='black';
     }
     for(i in mopts){
-      impose_tds[mopts[i]].style.color='grey';
+      impose_tds[mopts[i]].style.color='red';
     }
     options=JSON.parse(data[0][4]);
     for(var i = 0;i<options.length; i++){
@@ -68,8 +69,8 @@
       td.innerHTML='O';
       td.onclick=function() {
         if(this.style.color=='black'){
-          this.style.color='grey';
-        }else if(this.style.color=='grey'){
+          this.style.color='red';
+        }else if(this.style.color=='red'){
           this.style.color='black';
         }
       };
@@ -97,7 +98,7 @@
   function modify(){
     results=[];
     for(opt in options){
-      if(impose_tds[options[opt]].style.color=='grey'){
+      if(impose_tds[options[opt]].style.color=='red'){
         results.push(options[opt]);
       }
     }
@@ -114,7 +115,7 @@
   function settle(){
     results=[];
     for(opt in options){
-      if(impose_tds[options[opt]].style.color=='grey'){
+      if(impose_tds[options[opt]].style.color=='red'){
         results.push(options[opt]);
       }
     }
@@ -131,7 +132,7 @@
   function join(){
     results=[];
     for(opt in options){
-      if(impose_tds[options[opt]].style.color=='grey'){
+      if(impose_tds[options[opt]].style.color!='red'){
         results.push(options[opt]);
       }
     }
@@ -280,7 +281,7 @@
 		<td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td>
 		</tr>
   </table>
-  <p style="display:inline;color:black">O为可以参加(默认)&nbsp</p><p style="display:inline;color:grey">&nbspO为不可以参加</p></br>
+  <p style="display:inline;color:red">O为可以参加(默认)&nbsp</p><p style="display:inline;color:black">&nbspO为不可以参加</p></br>
   <button id="joinBtn" onclick='join()' type="button" class="btn btn-success"> Join </button>
   <button id="exitBtn" onclick='exitInv()' style="display:none" type="submit" class="btn btn-danger"> Exit </button>
   <button id="modiBtn" onclick='modify()' style="display:none" type="button" class="btn btn-warning"> Modify </button>

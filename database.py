@@ -17,7 +17,7 @@ def ranchar(i):
 #Users
 def addUser(uid, psw, name, timezone):
     sql = "insert into %s (id, psw, name, timezone) values ('%s','%s','%s',%d)"% (userPage, uid, psw, name, timezone)
-    exe(sql)
+    return exe(sql)
 
 def findUser(goal,uid):
     sql = "select %s from %s where id='%s'" % (goal,userPage,uid)
@@ -77,8 +77,11 @@ def addOpp(inv,uid,op):
         sql = "insert into %s (uid, iid, opt) values ('%s','%s','%s' )"% (optionPage, uid, inv, op)
         exe(sql)
 
-def delOpp(inv,uid):
-    sql = "delete from %s where uid='%s' and iid='%s'" % (optionPage, uid, inv)
+def delOpp(inv,uid=""):
+    if(uid==''):
+        sql = "delete from %s where iid='%s'" % (optionPage, inv)
+    else:
+        sql = "delete from %s where uid='%s' and iid='%s'" % (optionPage, uid, inv)
     exe(sql)
 
 def findOpp(inv,uid):
@@ -114,7 +117,7 @@ def addInv(goal, data):
     sql = "insert into %s (%s) values ('%s',%s)"% (invitationPage, goal, iid, data)
     exe(sql)
 
-def deleteInv(iid):
+def delInv(iid):
     sql = "delete from %s where id='%s'"% (invitationPage, iid)
     exe(sql)
 

@@ -13,73 +13,85 @@
   var baseColorR = 255-80;
   var baseColorG = 255-30;
   var baseColorB = 255-130;
-  var color = "red";
   $(document).ready(function(){
+    // for(var i=0; i<10; i++){
+    //   alert(i);
+    //   // $('.pos_abs').append('<tr><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td></tr>');
+    // }
     var dataString = {{data|tojson}};
     var data = JSON.parse(dataString);
+    //set basic info
     $('h2').text(data[0][0]);
-    if(data[0][1]=='v'){
-      $('h4').text('Voting...');
-    }
-    else{
-      $('h4').text('Settled down.');
-    }
-    $('#creatorTag').html('Creator : '+data[0][2]);
-    $('#discription').html('<b>Discription</b> '+data[0][3]);
+      if(data[0][1]=='v'){
+        $('h4').text('Voting...');
+      }
+      else{
+        $('h4').text('Settled down.');
+      }
+      $('#creatorTag').html('Creator : '+data[0][2]);
+      $('#description').html('<b>description</b> '+data[0][3]);
+    //set difference of creator and other people
     var uid = '{{uid}}';
-    if(data[0][2]!=uid) {
-      $('#setBtn').hide();
-      $('#delBtn').hide();
-    }
-    var count = 0;
-    var members = JSON.parse(data[0][5]);
-    var membersMD = $('#membersModalBody');
-    var mopts=[];
-    membersMD.text('');
-    for(i in members){
-      count+=1;
-      member = members[i];
-      membersMD.append("<p>"+member+"</p></br>");
-      if(member==uid){
-        $('#joinBtn').hide();
-        $('#exitBtn').show();
-        $('#modiBtn').show();
-        var tmopts=JSON.parse('{{moptions|tojson}}');
-        tmopts= JSON.parse(tmopts);
-        for (mopt in tmopts){
-          mopts.push(tmopts[mopt][0]);
+      if(data[0][2]!=uid) {
+        $('#setBtn').hide();
+        $('#delBtn').hide();
+      }
+      var count = 0;
+      var members = JSON.parse(data[0][5]);
+      var membersMD = $('#membersModalBody');
+      var mopts=[];
+      membersMD.text('');
+      for(i in members){
+        count+=1;
+        member = members[i];
+        membersMD.append("<p>"+member+"</p></br>");
+        if(member==uid){
+          $('#joinBtn').hide();
+          $('#exitBtn').show();
+          $('#modiBtn').show();
+          var tmopts=JSON.parse('{{moptions|tojson}}');
+          tmopts= JSON.parse(tmopts);
+          for (mopt in tmopts){
+            mopts.push(tmopts[mopt][0]);
+          }
         }
       }
-    }
     $('#voteCounts').text('Votes : '+count);
+    //initialize
     impose_tds = $(".timeunit1");
-    var td;
-    for(var i = 0; i < impose_tds.length; i++){
-      td = impose_tds[i];
-      td.index = i;
-      td.align='center';
-      td.style.color='black';
-    }
-    for(i in mopts){
-      impose_tds[mopts[i]].style.color='red';
-    }
+      var td;
+      for(var i = 0; i < impose_tds.length; i++){
+        td = impose_tds[i];
+        td.index = i;
+        td.align='center';
+        td.style.color='grey';
+      }
+      for(i in mopts){
+        impose_tds[mopts[i]].style.color='black';
+      }
+    //show user's options
     options=JSON.parse(data[0][4]);
     for(var i = 0;i<options.length; i++){
       td=impose_tds[options[i]];
-      td.innerHTML='O';
+      td.innerHTML='<b>O<b>';
       td.onclick=function() {
-        if(this.style.color=='black'){
-          this.style.color='red';
-        }else if(this.style.color=='red'){
+        if(this.style.color=='grey'){
           this.style.color='black';
+        }else if(this.style.color=='black'){
+          this.style.color='grey';
         }
       };
     }
-    finals = JSON.parse(data[0][7]);
+    //show settled blocks
+    var finals = [];
+    if(data[0][7]!=""){
+      finals = JSON.parse(data[0][7]);
+    }
     for(var i = 0;i<finals.length; i++){
       td=impose_tds[finals[i]];
       td.innerHTML='<b>√</b>';
     }
+    //set colors based on data from backend
     $.ajax({
       type: "POST",
       url: "/getInvOptions/",
@@ -90,83 +102,60 @@
         var memn=members.length;
         for(i in data){
           var ratio=data[i].length/memn;
-          impose_tds[options[i]].style.backgroundColor="rgb("+(255-parseInt(ratio*baseColorR))+","+(255-parseInt(ratio*baseColorG))+","+(255-parseInt(ratio*baseColorB))+")";
+          impose_tds[options[i]].style.backgroundColor=transColor(ratio);
         }
       }
     });
   });
-  
+  //inner function
+  function transColor(ratio){
+    return ("rgb("
+    +(255-parseInt(ratio*baseColorR))+","
+    +(255-parseInt(ratio*baseColorG))+","
+    +(255-parseInt(ratio*baseColorB))+")");
+  }
+  //transfer td's id
   function myid_to_id(tmp){
-        var num = (tmp%linenum)*7+(parseInt(tmp/linenum));
-        return num;
-    }
-
-    function id_to_myid(tmp){
-        var num = (tmp%7)*linenum+(parseInt(tmp/7));
-        return num;
-    }
-	
+    var num = (tmp%linenum)*7+(parseInt(tmp/linenum));
+    return num;
+  }
+  function id_to_myid(tmp){
+    var num = (tmp%7)*linenum+(parseInt(tmp/7));
+    return num;
+  }
+  //visit backend
   function modify(){
     results=[];
     for(opt in options){
-      if(impose_tds[options[opt]].style.color=='red'){
+      if(impose_tds[options[opt]].style.color=='black'){
         results.push(options[opt]);
       }
     }
-    $.ajax({
-      type: "GET",
-      url: "/modiInv/",
-      cache: false,
-      data: {opt:JSON.stringify(results), invid:'{{inv}}' },
-      success: function(data) {
-        window.location.reload();
-      }
-    });
+    window.location.href='/modiInv/?opt='+JSON.stringify(results)+'&invid='+'{{inv}}';
   }
   function settle(){
     results=[];
     for(opt in options){
-      if(impose_tds[options[opt]].style.color=='red'){
+      if(impose_tds[options[opt]].style.color=='black'){
         results.push(options[opt]);
       }
     }
-    $.ajax({
-      type: "GET",
-      url: "/setInv/",
-      cache: false,
-      data: {opt:JSON.stringify(results), invid:'{{inv}}' },
-      success: function(data) {
-        window.location.reload();
-      }
-    });
+    window.location.href='/setInv/?opt='+JSON.stringify(results)+'&invid='+'{{inv}}';
+  }
+  function deleteInv(){
+    window.location.href='/delInv/{{inv}}';
   }
   function join(){
     results=[];
     for(opt in options){
-      if(impose_tds[options[opt]].style.color!='red'){
+      if(impose_tds[options[opt]].style.color=='black'){
         results.push(options[opt]);
       }
     }
-    $.ajax({
-      type: "GET",
-      url: "/joinInv/",
-      cache: false,
-      data: {opt:JSON.stringify(results), invid:'{{inv}}' },
-      success: function(data) {
-        window.location.reload();
-      }
-    });
+    window.location.href='/joinInv/?opt='+JSON.stringify(results)+'&invid='+'{{inv}}';
   }
   function exitInv(){
-    $.ajax({
-      type: "POST",
-      url: "/exitInv/",
-      cache: false,
-      data: {invid:'{{inv}}' },
-      success: function(data) {
-        window.location.reload();
-      }
-    });
+    window.location.href='/exitInv/?invid={{inv}}';
   }
   </script>
   <style type="text/css">
@@ -192,7 +181,7 @@
     </ul>
   </div>
 </nav>
-<!-- Modal -->
+<!-- members ids Modal -->
 <div class="modal fade" id="members" role="dialog">
   <div class="modal-dialog">
     <!-- Modal content-->
@@ -212,87 +201,21 @@
 </div>
 
 <div class="container">
-  <h2 style="display:inline"> CLASS MEETING </h2> <h4 style="color:grey; display:inline"><b> voting... </b></h4>
+  <h2 style="display:inline"> EXAMPLE INVITATION PAGE </h2> <h4 style="color:grey; display:inline"><b> voting... </b></h4>
   <button id="setBtn" onclick="settle()" style="float:right" type="button" class="btn btn-info"> Set </button>
-  <button id="delBtn" style="float:right" type="button" class="btn btn-danger"> Delete </button>
-  <p id="creatorTag" style="color:grey"> creator : Evelyn(eli_home@outlook.com)</p> <p style="float:right" id="voteCounts" data-toggle="modal" data-target="#members">&nbspVotes: 37</p>
-  <p id="discription"> </p>
-
+  <button id="delBtn" onclick="deleteInv()" style="float:right" type="button" class="btn btn-danger"> Delete </button>
+  <p id="creatorTag" style="color:grey"> creator : default </p> <p style="float:right" id="voteCounts" data-toggle="modal" data-target="#members">&nbspVotes: 37</p>
+  <p id="description"> </p>
   <table border="1"  bordercolor="#909090" class="pos_abs">
+    {% for i in range(24) %}
     <tr>
-		<td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td>
+      {% for j in range(7) %}
+		    <td class="timeunit1"></td>
+      {% endfor%}
 		</tr>
-    <tr>
-		<td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td>
-		</tr>
-    <tr>
-		<td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td>
-		</tr>
-    <tr>
-		<td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td>
-		</tr>
-    <tr>
-		<td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td>
-		</tr>
-    <tr>
-		<td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td>
-		</tr>
-    <tr>
-		<td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td>
-		</tr>
-    <tr>
-		<td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td>
-		</tr>
-    <tr>
-		<td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td>
-		</tr>
-    <tr>
-		<td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td>
-		</tr>
-    <tr>
-		<td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td>
-		</tr>
-    <tr>
-		<td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td>
-		</tr>
-    <tr>
-		<td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td>
-		</tr>
-    <tr>
-		<td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td>
-		</tr>
-    <tr>
-		<td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td>
-		</tr>
-    <tr>
-		<td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td>
-		</tr>
-    <tr>
-		<td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td>
-		</tr>
-    <tr>
-		<td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td>
-		</tr>
-    <tr>
-		<td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td>
-		</tr>
-    <tr>
-		<td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td>
-		</tr>
-    <tr>
-		<td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td>
-		</tr>
-    <tr>
-		<td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td>
-		</tr>
-    <tr>
-		<td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td>
-		</tr>
-    <tr>
-		<td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td><td class="timeunit1"></td>
-		</tr>
+    {% endfor%}
   </table>
-  <p style="display:inline;color:red">O为可以参加(默认)&nbsp</p><p style="display:inline;color:black">&nbspO为不可以参加</p></br>
+  <p style="display:inline;color:black">O为选中&nbsp</p><p style="display:inline;color:grey">&nbspO为未选中&nbsp请选择后再提交 √为发起者敲定的时间</p></br>
   <button id="joinBtn" onclick='join()' type="button" class="btn btn-success"> Join </button>
   <button id="exitBtn" onclick='exitInv()' style="display:none" type="submit" class="btn btn-danger"> Exit </button>
   <button id="modiBtn" onclick='modify()' style="display:none" type="button" class="btn btn-warning"> Modify </button>

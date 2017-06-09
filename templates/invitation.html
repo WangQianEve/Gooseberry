@@ -95,6 +95,17 @@
       }
     });
   });
+  
+  function myid_to_id(tmp){
+        var num = (tmp%linenum)*7+(parseInt(tmp/linenum));
+        return num;
+    }
+
+    function id_to_myid(tmp){
+        var num = (tmp%7)*linenum+(parseInt(tmp/7));
+        return num;
+    }
+	
   function modify(){
     results=[];
     for(opt in options){

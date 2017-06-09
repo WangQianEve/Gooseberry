@@ -38,7 +38,7 @@ def index():
             session['username']=result[0][1]
             table_data = json.dumps(get_table_info_by_usr(session['uid']))
             friendlist = database.findCon(session['uid'])
-            usrlist = [session['uid']]
+            usrlist = []
             bkdata= json.dumps(cal_color(usrlist))
             print "bkdata"
             print bkdata
@@ -48,7 +48,7 @@ def index():
     if 'uid' in session:
         table_data = json.dumps(get_table_info_by_usr(session['uid']))
         friendlist = database.findCon(session['uid'])
-        usrlist = [[session['uid']]]
+        usrlist = []
         bkdata= json.dumps(cal_color(usrlist));
         print "bkdata"
         print bkdata
@@ -207,11 +207,11 @@ def getcon():
 
 def count_time_unit(t):
     time_num = 0
-    print " count time unit "
+    #print " count time unit "
     d1 = datetime.datetime(int('20'+t[0:2]), int(t[2:4]), int(t[4:6]))
     d2 = datetime.datetime(int('20'+cur_date[0:2]), int(cur_date[2:4]), int(cur_date[4:6]))
     time_num = (d1-d2).days * lineNum + int(t[6:8])*lineNum/24
-    print time_num
+    #print time_num
     return time_num
 
 def calc_time(time_num):
@@ -254,6 +254,7 @@ def cal_color(usrlist):
     #Count the times of each time unit
     #get users'data from database
     for u in usrlist:
+        print u
         user_data = database.findTime(u,cur_date)
         for i in user_data:
             start_time = i[1].strftime('%y%m%d%H00')
@@ -262,6 +263,8 @@ def cal_color(usrlist):
             end_num = count_time_unit(end_time)
 
             for k in range(start_num, end_num + 1):
+                if k < 0:
+                    continue;
                 if not str(k) in tmpdict:
                     tmpdict[str(k)] = 1
                 else:
@@ -321,6 +324,8 @@ def get_color():
         if request.method == 'POST':
             usrdata = json.loads(request.get_json().encode("utf-8"))
             usrlist = usrdata['id']
+            print "usrlist"
+            print usrlist
         bkdata= json.dumps(cal_color(usrlist));
         return bkdata
 
